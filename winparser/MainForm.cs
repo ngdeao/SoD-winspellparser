@@ -43,10 +43,10 @@ namespace winparser
             SearchEffect.Items.Add("Memory Blur");
             SearchEffect.Items.Add("Root");
             SearchEffect.Items.Add("Stun");
-            SearchEffect.Items.Add("Stamina Loss");
+            //SearchEffect.Items.Add("Stamina Loss");
             SearchEffect.Items.Add("Hate");
             SearchEffect.Items.Add("Invisibility");
-            SearchEffect.Items.Add("Add Defensive Proc");
+            //SearchEffect.Items.Add("Add Defensive Proc");
             SearchEffect.Items.AddRange(SpellSearch.EffectHelpers.Keys.ToArray());
             SearchEffect.Items.Add("");
 
@@ -131,7 +131,18 @@ namespace winparser
             //}
             // 2. if a class is selected then sort by the casting levels for that class first
             // place castable spells before non castable effects (level == 0)
-            if (cls >= 0)
+            if (category == "Icon")
+            {
+                Sorting = String.Format("Results sorted by icon.", Results.Count);
+                Results.Sort((a, b) =>
+                {
+                    int comp = a.Icon - b.Icon;
+                    if (comp == 0)
+                        comp = b.Icon - a.Icon;
+                    return comp;
+                });
+
+            } else if (cls >= 0)
             {
                 Sorting = String.Format("Results sorted by {1} level.", Results.Count, SearchClass.Text);
                 Results.Sort((a, b) =>
@@ -659,6 +670,9 @@ namespace winparser
                 SearchCategory.Items.AddRange(Spells.SelectMany(x => x.Categories).Distinct().ToArray());
             }
             SearchCategory.Items.Add("AA");
+#if DEBUG
+            SearchCategory.Items.Add("Icon");
+#endif
             SearchCategory.Items.Add("");
             SearchText_TextChanged(sender, e);
         }

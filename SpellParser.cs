@@ -505,6 +505,11 @@ namespace Everquest
 
     public enum SpellIllusion
     {
+                    
+        Leather = (-2 << 16) + 1,
+        Chainmail = (-2 << 16) + 2,
+        Platemail = (-2 << 16) + 3,
+        Void_Touched = (-1 << 16) + 2,
         Gender_Change = -1,
         Human = 1,
         Barbarian = 2,
@@ -519,26 +524,33 @@ namespace Everquest
         Halfling = 11,
         Gnome = 12,
         Old_Aviak = 13,
-        Old_Werewolf = 14,
+        Werewolf = 14,
         Old_Brownie = 15,
         Old_Centaur = 16,
         Trakanon = 19,
         Venril_Sathir = 20,
         Froglok = 27,
+        Werefrog = (27 << 16) + 1,
         Old_Gargoyle = 29,
         Gelatinous_Cube = 31,
-        Old_Wolf = 42,
+        Goblin = 40,
+        Wolf = 42,
         Black_Spirit_Wolf = (42 << 16) + 1,
         White_Spirit_Wolf = (42 << 16) + 2,
-        Old_Bear = 43,
+        Bear = 43,
         Polar_Bear = (43 << 16) + 2,
         Freeport_Militia = 44,
         Imp = 46,
+        Dragon = 49,
         Lizard_Man = 51,
+        Fae = 56,
         Old_Drachnid = 57,
         Solusek_Ro = 58,
+        Skeleton = 60,
         Tunare = 62,
         Tiger = 63,
+        Form_of_the_Gladiator = (66 << 16) + 2,
+        Form_of_the_Frozen_Monolith = (66 << 16) + 1,
         Elemental = 75,
         Earth_Elemental = 75 << 16,
         Fire_Elemental = (75 << 16) + 1,
@@ -618,7 +630,7 @@ namespace Everquest
         Scaled_Wolf = 356,
         Vampire = 360,
         Nightrage_Orphan = (360 << 16) + 1,
-        Skeleton = 367,
+        nSkeleton = 367,
         Drybone_Skeleton = (367 << 16) + 1,
         Frostbone_Skeleton = (367 << 16) + 2,
         Firebone_Skeleton = (367 << 16) + 3,
@@ -661,7 +673,7 @@ namespace Everquest
         Crystal_Shard = 425,
         Dervish = 431,
         Drake = 432,
-        Goblin = 433,
+        New_Goblin = 433,
         Solusek_Goblin = (433 << 16) + 1,
         Dagnor_Goblin = (433 << 16) + 2,
         Valley_Goblin = (433 << 16) + 3,
@@ -679,7 +691,7 @@ namespace Everquest
         Lava_Spider = 450,
         Lava_Spider_Queen = 451,
         Dragon_Egg = 445,
-        Werewolf = 454,
+        New_Werewolf = 454,
         White_Werewolf = (454 << 16) + 2,
         Kobold = 455,
         Kobold_King = (455 << 16) + 2,
@@ -709,8 +721,8 @@ namespace Everquest
         Fire_Elemental3 = 477,
         Water_Elemental3 = 478,
         Alligator = 479,
-        Bear = 480,
-        Wolf = 482,
+        New_Bear = 480,
+        New_Wolf = 482,
         Spectre = 485,
         Banshee = 487,
         Banshee2 = 488,
@@ -728,7 +740,7 @@ namespace Everquest
         Gnoll = 524,
         Undead_Gnoll = (524 << 16) + 1,
         Satyr = 529,
-        Dragon = 530,
+        New_Dragon = 530,
         Hideous_Harpy = 527,
         Goo = 549,
         Aviak = 558,
@@ -1424,7 +1436,7 @@ namespace Everquest
                         return String.Format("Illusion: {0} ({1})", Spell.FormatEnum((SpellIllusion)base1), base2);
                     return String.Format("Illusion: {0}", Spell.FormatEnum((SpellIllusion)base1));
                 case 59:
-                    return Spell.FormatCount("Damage Shield", -value);
+                    return Spell.FormatCount("Damage Shield", -value, -minvalue, level, minlevel);
                 case 61:
                     return "Identify Item";
                 case 63:
@@ -2772,7 +2784,8 @@ namespace Everquest
             spell.CancelOnSit = ParseBool(fields[124]);
 
             // 125..141 deity casting restrictions
-            string[] gods = new string[] { "Agnostic", "Bertox", "Brell", "Cazic", "Erollisi", "Bristlebane", "Innoruuk", "Karana", "Mithanial", "Prexus", "Quellious", "Rallos", "Rodcet", "Solusek", "Tribunal", "Tunare", "Veeshan" };
+            // string[] gods = new string[] { "Agnostic", "Bertox", "Brell", "Cazic", "Erollisi", "Bristlebane", "Innoruuk", "Karana", "Mithanial", "Prexus", "Quellious", "Rallos", "Rodcet", "Solusek", "Tribunal", "Tunare", "Veeshan" };
+            string[] gods = new string[] { "Unsworn", "Shiritri", "Tarhyl", "Sihala", "Shojar", "Gradalsh", "Tarhansar", "Sivyana", "Althuna", "Marlow", "Jayla", "Enthann", "Unknown", "Pariah", "Divine Light", "Malath", "Unknown" };
             for (int i = 0; i < gods.Length; i++)
                 if (ParseBool(fields[125 + i]))
                     spell.Deity += gods[i] + " ";

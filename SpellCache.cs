@@ -20,15 +20,15 @@ namespace Everquest
             EffectHelpers.Add("Nuke", @"Decrease Current HP by (\d+)(?!.*(?:per tick))");
             EffectHelpers.Add("DoT", @"Decrease Current HP by (\d+) per tick");
             EffectHelpers.Add("Haste", @"Increase Melee Haste (?:v3 )?by (\d+)");
-            EffectHelpers.Add("Slow", @"Decrease Melee Haste by (\d+)");
+            EffectHelpers.Add("Slow", @"Decrease Attack Speed by (\d+)");
             EffectHelpers.Add("Snare", @"Decrease Movement Speed by (\d+)");
             EffectHelpers.Add("Shrink", @"Decrease Player Size");
-            EffectHelpers.Add("Rune", "@Absorb");
+            EffectHelpers.Add("Rune", @"Absorb");
             EffectHelpers.Add("Pacify", @"Decrease Social Radius");
             EffectHelpers.Add("Damage Shield", @"Increase Damage Shield by (\d+)");
             EffectHelpers.Add("Mana Regen", @"Increase Current Mana by (\d+)");
             EffectHelpers.Add("Add Proc", @"(?:Add Proc)|(?:Add Skill Proc)");
-            EffectHelpers.Add("Add Spell Proc", @"Cast on Spell Use");
+            //EffectHelpers.Add("Add Spell Proc", @"Cast on Spell Use");
         }
     }
 
@@ -134,7 +134,7 @@ namespace Everquest
                     query = query.Where(x => x.ExtLevels[cls] == 254);
                 else if (category == "AA")
                     query = query.Where(x => x.ExtLevels.Any(y => y == 254));
-                else
+                else if (category != "Icon")
                     query = query.Where(x => x.Categories.Any(y => y.StartsWith(category, StringComparison.InvariantCultureIgnoreCase)));
             }
 
