@@ -44,13 +44,13 @@ namespace winparser
             listView1.Items.Clear();
 
             var dir = new DirectoryInfo(".");
-            var files = dir.GetFiles("*spells*.txt");
+            var files = dir.GetFiles("spells_us.txt");
             ListViewItem item = null;
             foreach (var f in files)
             {
                 item = new ListViewItem(f.Directory + "\\" + f.Name);
                 item.SubItems.Add(f.Length.ToString());
-                item.SubItems.Add(CountFields(f.Name).ToString());
+                item.SubItems.Add(CountFields(f.Directory + "\\" + f.Name).ToString());
                 listView1.Items.Add(item);
             }
 
@@ -94,7 +94,7 @@ namespace winparser
                 {
                     item = new ListViewItem(f.Directory + "\\" + f.Name);
                     item.SubItems.Add(f.Length.ToString());
-                    item.SubItems.Add(CountFields(f.Name).ToString());
+                    item.SubItems.Add(CountFields(f.Directory + "\\" + f.Name).ToString());
                     listView1.Items.Add(item);
                 }
                 if (item != null)
