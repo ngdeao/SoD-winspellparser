@@ -1,3 +1,8 @@
+Acknowledgements
+================
+This spell parser is based on the open source spell parser from raidloot.com.
+Specific Shards of Dalaya spell information and data was extracted from the Shards of Dalaya, Ruby on Rails based SoD-spellparser.
+
 
 REQUIREMENTS
 ============
@@ -10,6 +15,15 @@ http://www.microsoft.com/downloads/details.aspx?FamilyId=333325FD-AE52-4E35-B531
 If you run the parser and get the error: "This application failed to initialize properly"
 then you will need to install the framework.
 
+RUNNING IN WINDOWS
+================================================
+Run winparser.exe within windows.
+
+This will automatically bring up any spells_us.txt located in the startup folder.
+
+You can browse to a different spells_us.txt if desired by pressing the "Select New File" button.
+
+Press the "Open" button to bring up the window that displays spell information and search parameters.
 
 
 HOW TO USE FROM THE COMMAND LINE
@@ -45,21 +59,6 @@ This shows spells with SPA type 3 (movement speed)
 This shows ranger spells
 
 
-
-UPDATING THE SPELL DATABASE
-============================
-If you run the parser from a folder other than the EQ folder you will need to manually update spell
-files after a patch. This can be done using the "update" command:
-
-
->parser update
-
-Downloads the current *live* server spell database
-
-
->parser update -test
-
-Downloads the current *test* server spell database
 
 
 
