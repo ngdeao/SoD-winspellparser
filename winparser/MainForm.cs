@@ -43,6 +43,7 @@ namespace winparser
             SearchEffect.Items.Add("Memory Blur");
             SearchEffect.Items.Add("Root");
             SearchEffect.Items.Add("Stun");
+            SearchEffect.Items.Add("Stamina Loss");
             SearchEffect.Items.Add("Hate");
             SearchEffect.Items.Add("Invisibility");
             SearchEffect.Items.Add("Add Defensive Proc");

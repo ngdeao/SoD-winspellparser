@@ -862,6 +862,7 @@ namespace Everquest
         public bool DurationExtendable;
         public string[] Slots;
         public int[] SlotEffects;
+        public int[] Base1s;
         //public byte Level;
         public byte[] Levels;
         public byte[] ExtLevels; // similar to levels but assigns levels for side effect spells that don't have levels defined (e.g. a proc effect will get the level of it's proc buff)
@@ -960,6 +961,7 @@ namespace Everquest
         {
             Slots = new string[12];
             SlotEffects = new int[12];
+            Base1s = new int[12];
             Levels = new byte[16];
             ExtLevels = new byte[16];
             ConsumeItemID = new int[4];
@@ -1300,27 +1302,30 @@ namespace Everquest
                 case 1:
                     return Spell.FormatCount("AC", (int)(value / (100f / 29f)), (int)(minvalue / (100f / 29f)), level, minlevel);
                 case 2:
-                    return Spell.FormatCount("ATK", value) + range;
+                    return Spell.FormatCount("ATK", value, minvalue, level, minlevel) + range;
                 case 3:
-                    return Spell.FormatPercent("Movement Speed", value);
+                    return Spell.FormatPercent("Movement Speed", value, minvalue, minlevel, level);
                 case 4:
-                    return Spell.FormatCount("STR", value) + range;
+                    return Spell.FormatCount("STR", value, minvalue, level, minlevel) + range;
                 case 5:
-                    return Spell.FormatCount("DEX", value) + range;
+                    return Spell.FormatCount("DEX", value, minvalue, level, minlevel) + range;
                 case 6:
-                    return Spell.FormatCount("AGI", value) + range;
+                    return Spell.FormatCount("AGI", value, minvalue, level, minlevel) + range;
                 case 7:
-                    return Spell.FormatCount("STA", value) + range;
+                    return Spell.FormatCount("STA", value, minvalue, level, minlevel) + range;
                 case 8:
-                    return Spell.FormatCount("INT", value) + range;
+                    return Spell.FormatCount("INT", value, minvalue, level, minlevel) + range;
                 case 9:
-                    return Spell.FormatCount("WIS", value) + range;
+                    return Spell.FormatCount("WIS", value, minvalue, level, minlevel) + range;
                 case 10:
                     // 10 is often used as a filler or to trigger server side scripts
-                    return Spell.FormatCount("CHA", value) + range;
+                    return Spell.FormatCount("CHA", value, minvalue, level, minlevel) + range;
                 case 11:
                     // base attack speed is 100. so 85 = 15% slow, 130 = 30% haste
-                    return Spell.FormatPercent("Melee Haste", value - 100);
+                    if (value > 100)
+                        return Spell.FormatPercent("Melee Haste", value - 100, minvalue - 100, minlevel, level);
+                    else
+                        return Spell.FormatPercent("Attack Speed", value - 100);
                 case 12:
                     if (base1 > 1)
                         return String.Format("Invisibility (Enhanced {0})", base1);
@@ -1348,7 +1353,11 @@ namespace Everquest
                 case 23:
                     return "Fear" + maxlevel;
                 case 24:
-                    return Spell.FormatCount("Stamina Loss", value);
+                    if (value < 0)
+                        return String.Format("Increase Stamina Loss by {0}", -value) + repeating;
+                    else
+                        return String.Format("Increase Stamina Regeneration by {0}", value) + repeating;
+                    //return Spell.FormatCount("Stamina Loss", -value, -minvalue, level, minlevel);
                 case 25:
                     return "Bind";
                 case 26:
@@ -1550,11 +1559,11 @@ namespace Everquest
                     // damages the target whenever it hits something
                     return Spell.FormatCount("Reverse Damage Shield", -value);
                 case 123:
-                    for (int j = 0; j < 12; j++)
-                    {
-                        if (base1 == SlotEffects[j] && SlotEffects[j] > 0)
-                            return String.Format("Forced Spell Stacking:  Slot {0} ", j + 1) + Spell.FormatEnum((SpellEffect)SlotEffects[j]);
-                    }
+                    //for (int j = 0; j < 12; j++)
+                    //{
+                    //    if (base1 == SlotEffects[j] && SlotEffects[j] > -1)
+                    //        return String.Format("Forced Spell Stacking:  Slot {0} ", j + 1) + Spell.FormatEnum((SpellEffect)SlotEffects[j]);
+                    //}
                     return "Forced Spell Stacking: Unknown";
                 case 124:
                     return Spell.FormatPercent("Spell Damage", base1, base2);
@@ -2452,7 +2461,7 @@ namespace Everquest
             return null;
         }
 
-        static private string FormatEnum(Enum e)
+        static public string FormatEnum(Enum e)
         {
             string type = e.ToString().Replace("__"," / ").Replace("_", " ").Trim();
             if (Regex.IsMatch(type, @"^-?\d+$"))
@@ -2507,6 +2516,24 @@ namespace Everquest
                 return String.Format("{0} {1} by {2}%", max < 0 ? "Decrease" : "Increase", name, Math.Abs(max));
 
             return String.Format("{0} {1} by {2}% to {3}%", max < 0 ? "Decrease" : "Increase", name, Math.Abs(min), Math.Abs(max));
+        }
+
+        static private string FormatPercent(string name, float min, float max, int level, int minlevel)
+        {
+            if (Math.Abs(min) > Math.Abs(max))
+            {
+                float temp = min;
+                min = max;
+                max = temp;
+            }
+
+            if (min == 0 && max != 0)
+                min = 1;
+
+            if (min == max)
+                return String.Format("{0} {1} by {2}%", max < 0 ? "Decrease" : "Increase", name, Math.Abs(max));
+
+            return String.Format("{0} {1} by {2}% (L{4}) to {3}% (L{5})", max < 0 ? "Decrease" : "Increase", name, Math.Abs(min), Math.Abs(max), level, minlevel);
         }
 
         /*
@@ -2880,6 +2907,7 @@ namespace Everquest
                 int base2 = ParseInt(fields[32 + i]);
 
                 spell.SlotEffects[i] = spa;
+                spell.Base1s[i] = base1;
                 spell.Slots[i] = spell.ParseEffect(spa, base1, base2, max, calc, MaxLevel, MinLevel);
 
 #if DEBUG
@@ -2897,6 +2925,17 @@ namespace Everquest
                 //if (value != base1 && Array.IndexOf(uses_value, spa) < 0 && Array.IndexOf(uses_base1, spa) < 0)
                 //    Console.Error.WriteLine(String.Format("SPA {1} {0} has diff value/base1: {2}/{3} calc: {4}", spell.Name, spa, value, base1, calc));
             }
+            // Spell stacking checks after all slots filled in with spell effect and base1 values, to get any missed matches
+            for (int j = 0; j < 12; j++)
+            {
+                if (spell.SlotEffects[j] == 123)
+                    for (int p = 0; p < 12; p++)
+                    {
+                        if (spell.Base1s[j] == spell.SlotEffects[p] && spell.SlotEffects[p] > -1)
+                            spell.Slots[j] = String.Format("Forced Spell Stacking:  Slot {0} ", p + 1) + Spell.FormatEnum((SpellEffect)spell.SlotEffects[p]);
+                    }
+            }
+
 
             // debug stuff
             //if (spell.ID == 36293) for (int i = 0; i < fields.Length; i++) Console.WriteLine("{0}: {1}", i, fields[i]);
