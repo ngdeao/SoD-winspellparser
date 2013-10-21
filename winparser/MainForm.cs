@@ -18,7 +18,7 @@ namespace winparser
     //[ComVisible(true)] // for SearchBrowser.ObjectForScripting
     public partial class MainForm : Form
     {
-        private Dictionary<string, string> Effects;
+        //private Dictionary<string, string> Effects;
 
         private SpellCache Spells;
 
@@ -394,11 +394,11 @@ namespace winparser
                 return String.Format("<a href='#group{0}' onclick='showGroup({0}, this); return false;'>{1}</a>", id, name);
             });
 
-            text = Spell.ItemRefExpr.Replace(text, m =>
-            {
+            //text = Spell.ItemRefExpr.Replace(text, m =>
+            //{
                 //return String.Format("<a href='http://lucy.allakhazam.com/item.html?id={0}' class='ext' target='_top'>Item {0}</a>", m.Groups[1].Value);
-                return String.Format("<a href='http://everquest.allakhazam.com/db/item.html?item={0};source=lucy' class='ext' target='_top'>Item {0}</a>", m.Groups[1].Value);
-            });
+            //    return String.Format("<a href='http://everquest.allakhazam.com/db/item.html?item={0};source=lucy' class='ext' target='_top'>Item {0}</a>", m.Groups[1].Value);
+            //});
 
             return text;
         }
@@ -669,7 +669,7 @@ namespace winparser
                 SearchCategory.Items.Clear();
                 SearchCategory.Items.AddRange(Spells.SelectMany(x => x.Categories).Distinct().ToArray());
             }
-            SearchCategory.Items.Add("AA");
+            //SearchCategory.Items.Add("AA");
 #if DEBUG
             SearchCategory.Items.Add("Icon");
 #endif
