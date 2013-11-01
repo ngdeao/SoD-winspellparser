@@ -82,9 +82,7 @@ namespace parser
         {
             IEnumerable<Spell> results = null;
 
-            if (field == "all")
-                results = spells;
-            //results = list.Where(x => (int)x.TargetRestrict > 0).OrderBy(x => x.TargetRestrict);
+            results = spells.Where(x => (int)x.TargetRestrict > 0).OrderBy(x => x.TargetRestrict);
 
             // search by effect type
             if (field == "type" || field == "spa")

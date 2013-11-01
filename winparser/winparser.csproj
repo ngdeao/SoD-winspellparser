@@ -57,7 +57,7 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup>
-    <Win32Resource>C:\Users\Jim\Downloads\Dalaya Spells\spellparser\winparser\winparser.res</Win32Resource>
+    <Win32Resource>winparser.res</Win32Resource>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="lzma, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -165,7 +165,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Bin\rc.exe" /r "$(ProjectDir)\winparser.rc"</PreBuildEvent>
+    <PreBuildEvent>"$(DevEnvDir)..\..\..\Microsoft SDKs\Windows\v7.0A\Bin\rc.exe" /r "$(TargetDir)$(TargetName).rc"
+</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

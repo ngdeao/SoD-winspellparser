@@ -102,7 +102,7 @@
             this.ShowRelated.TabIndex = 12;
             this.ShowRelated.Text = "Show related spells";
             this.ShowRelated.UseVisualStyleBackColor = true;
-            this.ShowRelated.CheckedChanged += new System.EventHandler(this.SearchText_TextChanged);
+            this.ShowRelated.CheckedChanged += new System.EventHandler(this.Initiate_Search);
             // 
             // SearchEffectSlot
             // 
@@ -128,7 +128,7 @@
             this.SearchEffectSlot.Size = new System.Drawing.Size(75, 23);
             this.SearchEffectSlot.TabIndex = 9;
             this.ToolTip.SetToolTip(this.SearchEffectSlot, "Limit the effect filter to a single slot.");
-            this.SearchEffectSlot.TextChanged += new System.EventHandler(this.SearchText_TextChanged);
+            this.SearchEffectSlot.TextChanged += new System.EventHandler(this.Initiate_Search);
             // 
             // label7
             // 
@@ -149,7 +149,7 @@
             this.SearchCategory.Size = new System.Drawing.Size(222, 23);
             this.SearchCategory.Sorted = true;
             this.SearchCategory.TabIndex = 11;
-            this.SearchCategory.TextChanged += new System.EventHandler(this.SearchText_TextChanged);
+            this.SearchCategory.TextChanged += new System.EventHandler(this.Initiate_Search);
             // 
             // label6
             // 
@@ -170,7 +170,7 @@
             this.SearchLevel.Text = "1-65";
             this.ToolTip.SetToolTip(this.SearchLevel, "Enter a single level (e.g. 65) or a level range (e.g. 60 - 65).  This filter is o" +
                     "nly applied when a class is selected. AA are level 254.");
-            this.SearchLevel.TextChanged += new System.EventHandler(this.SearchText_TextChanged);
+            this.SearchLevel.TextChanged += new System.EventHandler(this.Initiate_Search);
             // 
             // label5
             // 
@@ -192,7 +192,7 @@
             this.DisplayText.TabStop = true;
             this.DisplayText.Text = "Details";
             this.DisplayText.UseVisualStyleBackColor = true;
-            this.DisplayText.Click += new System.EventHandler(this.SearchText_TextChanged);
+            this.DisplayText.Click += new System.EventHandler(this.Initiate_Search);
             // 
             // DisplayTable
             // 
@@ -203,7 +203,7 @@
             this.DisplayTable.TabIndex = 14;
             this.DisplayTable.Text = "Table";
             this.DisplayTable.UseVisualStyleBackColor = true;
-            this.DisplayTable.Click += new System.EventHandler(this.SearchText_TextChanged);
+            this.DisplayTable.Click += new System.EventHandler(this.Initiate_Search);
             // 
             // label4
             // 
@@ -237,7 +237,7 @@
             this.SearchEffect.TabIndex = 7;
             this.ToolTip.SetToolTip(this.SearchEffect, "Select a spell effect type from the list, enter an SPA number, or type some text " +
                     "that appears in the effect description.");
-            this.SearchEffect.TextChanged += new System.EventHandler(this.SearchText_TextChanged);
+            this.SearchEffect.TextChanged += new System.EventHandler(this.Initiate_Search);
             // 
             // label3
             // 
@@ -268,7 +268,7 @@
             this.SearchClass.Size = new System.Drawing.Size(141, 23);
             this.SearchClass.Sorted = true;
             this.SearchClass.TabIndex = 3;
-            this.SearchClass.TextChanged += new System.EventHandler(this.SearchClass_TextChanged);
+            this.SearchClass.SelectedValueChanged += new System.EventHandler(this.SearchClass_TextChanged);
             // 
             // label2
             // 
@@ -287,7 +287,6 @@
             this.label1.Size = new System.Drawing.Size(57, 15);
             this.label1.TabIndex = 0;
             this.label1.Text = "Text or ID";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // SearchText
             // 
@@ -295,7 +294,6 @@
             this.SearchText.Name = "SearchText";
             this.SearchText.Size = new System.Drawing.Size(222, 23);
             this.SearchText.TabIndex = 1;
-            this.SearchText.TextChanged += new System.EventHandler(this.SearchText_TextChanged);
             // 
             // SearchBrowser
             // 

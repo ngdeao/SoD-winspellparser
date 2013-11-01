@@ -66,10 +66,13 @@ namespace winparser
         /// <summary>
         /// Open a spell file in the parser.
         /// </summary>
-        private void Open(string spellPath)
+        private void Open(string spellPath, bool shortfile = false)
         {
             var f = new MainForm();
-            f.Load(spellPath, spellPath.Replace("spells_us", "dbstr_us"));
+            if (shortfile)
+                f.Load(spellPath, spellPath.Replace("spells_us", "eqstr_us"));
+            else
+                f.Load(spellPath, spellPath.Replace("spells_us", "dbstr_us"));
             f.Show();
         }
 
@@ -169,7 +172,7 @@ namespace winparser
         {
             for (int i = 0; i < listView1.SelectedItems.Count; i++)
             {
-                Open(listView1.SelectedItems[i].Text);
+                Open(listView1.SelectedItems[i].Text, listView1.SelectedItems[i].SubItems[2].Text == "175");
                 Hide();
             }
         }

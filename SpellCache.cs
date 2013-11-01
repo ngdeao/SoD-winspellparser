@@ -16,13 +16,15 @@ namespace Everquest
 
             EffectHelpers.Add("Cure", @"Decrease \w+ Counter by (\d+)");
             EffectHelpers.Add("Heal", @"Increase Current HP by ([1-9]\d+)(?!.*(?:per tick))"); // 1-9 excludes spells with Increase Current HP by 0
-            EffectHelpers.Add("HoT", @"Increase Current HP by (\d+) per tick");
+            EffectHelpers.Add("HoT (Heal Over Time)", @"Increase Current HP by (\d+) per tick");
             EffectHelpers.Add("Nuke", @"Decrease Current HP by (\d+)(?!.*(?:per tick))");
-            EffectHelpers.Add("DoT", @"Decrease Current HP by (\d+) per tick");
+            EffectHelpers.Add("DoT (Dmg Over Time)", @"Decrease Current HP by (\d+) per tick");
             EffectHelpers.Add("Haste", @"Increase Melee Haste (?:v3 )?by (\d+)");
             EffectHelpers.Add("Slow", @"Decrease Attack Speed by (\d+)");
             EffectHelpers.Add("Snare", @"Decrease Movement Speed by (\d+)");
             EffectHelpers.Add("Shrink", @"Decrease Player Size");
+            EffectHelpers.Add("Summon Item", @"Summon:");
+            EffectHelpers.Add("Summon Pet", @"Summon Pet:");
             EffectHelpers.Add("Rune", @"Absorb");
             EffectHelpers.Add("Pacify", @"Decrease Social Radius");
             EffectHelpers.Add("Damage Shield", @"Increase Damage Shield by (\d+)");
@@ -134,7 +136,7 @@ namespace Everquest
                     query = query.Where(x => x.ExtLevels[cls] == 254);
                 else if (category == "AA")
                     query = query.Where(x => x.ExtLevels.Any(y => y == 254));
-                else if (category != "Icon")
+                else
                     query = query.Where(x => x.Categories.Any(y => y.StartsWith(category, StringComparison.InvariantCultureIgnoreCase)));
             }
 

@@ -131,14 +131,14 @@ namespace winparser
             //}
             // 2. if a class is selected then sort by the casting levels for that class first
             // place castable spells before non castable effects (level == 0)
-            if (category == "Icon")
+            if (category == "ALL")
             {
                 Sorting = String.Format("Results sorted by icon.", Results.Count);
                 Results.Sort((a, b) =>
                 {
-                    int comp = a.Icon - b.Icon;
+                    int comp = a.ID - b.ID;
                     if (comp == 0)
-                        comp = b.Icon - a.Icon;
+                        comp = b.ID - a.ID;
                     return comp;
                 });
 
@@ -216,7 +216,6 @@ namespace winparser
                     html.Append("<p>Only the first 2000 are shown.</p>");
 
                 Func<Spell, bool> visible = spell => ShowRelated.Checked || BaseResults.Contains(spell.ID);
-                
 
                 if (DisplayText.Checked)
                     ShowAsText(Results.Take(2000), visible, html);
@@ -250,31 +249,39 @@ namespace winparser
             string apppath = System.Windows.Forms.Application.StartupPath;
             foreach (var spell in list)
             {
-                //html.AppendFormat("<p id='spell{0}' class='spell group{1} {3}'><strong>{2}</strong><br/>", spell.ID, spell.GroupID, spell.ToString(), visible(spell) ? "" : "hidden");
+
                 if (spell.GroupID <= 0)
                 {
                     if (spell.Icon > 0)
                         html.AppendFormat("<p id='spell{0}' class='spell group{1} {3}'>{4}<br/>", spell.ID, spell.GroupID, spell.Name, visible(spell) ? "" : "hidden", IconImage(spell.Icon, spell.Name, spell.ID));
                     else
                         html.AppendFormat("<p id='spell{0}' class='spell group{1} {3}'><strong>{2}</strong>     (Spell ID: {0})<br/>", spell.ID, spell.GroupID, spell.Name, visible(spell) ? "" : "hidden");
+                    // for testing
+                    //html.AppendFormat("<p id='spell{0}' class='spell group{1} {3}'>{0}^1^{2}<br/>", spell.ID, spell.GroupID, spell.Name, visible(spell) ? "" : "hidden");
                 }
-                //html.AppendFormat("<p id='spell{0}' class='spell group{1} {3}'><IMG src=\"res://winparser.exe/Icon/mainicon.ico\"><strong>{2}</strong>     (ID: {4})<br/>", spell.ID, spell.GroupID, spell.Name, visible(spell) ? "" : "hidden", spell.ID);
                 else
                 {
                     html.AppendFormat("<p id='spell{0}' class='spell group{1} {3}'><strong>{2}</strong>     [{4}/{5}]<br/>", spell.ID, spell.GroupID, spell.Name, visible(spell) ? "" : "hidden", spell.ID, spell.GroupID);
                 }
                 foreach (var line in spell.Details())
-                    html.Append(InsertSpellRefLinks(line) + "<br/>");
+                    html.AppendFormat("{0}<br/>", InsertSpellRefLinks(line));
                 for (int i = 0; i < spell.Slots.Length; i++)
                     if (!String.IsNullOrEmpty(spell.Slots[i]))
-                        html.AppendFormat("<strong>Slot {0}:</strong> {1}<br/>", i + 1, InsertSpellRefLinks(spell.Slots[i]));
+                        html.AppendFormat("<Strong>Slot {0}:</strong> {1}<br/>", i + 1, InsertSpellRefLinks(spell.Slots[i]));
 #if DEBUG
+
                 if (spell.Desc != null)
-                    html.AppendFormat("({0}) {1}", spell.DescID, spell.Desc);
+                    html.AppendFormat("Description ({0}): {1}<br/>", spell.DescID, spell.Desc);
+                else
+                    html.AppendFormat("Description ({0}):<br/>", spell.DescID);
+#else
+                if (spell.Desc != null)
+                    html.AppendFormat("Description {0}: {1}", spell.DescID, spell.Desc);
                 else if (spell.DescID > 0)
-                    html.AppendFormat("Blank Description (ID: {0})", spell.DescID);
+                    html.AppendFormat("Description {0}:", spell.DescID);
 #endif
                 html.Append("</p>");
+
             }
         }
 
@@ -643,7 +650,12 @@ namespace winparser
         private void SearchClass_TextChanged(object sender, EventArgs e)
         {
             // whenever the class is changed refresh the list of categories so that it only shows categories that class can cast
-            int cls = SpellParser.ParseClass(SearchClass.Text) - 1;
+
+            int cls = -1;
+            
+            if (SearchClass.Text.Length > 0)
+                cls = SpellParser.ParseClass(SearchClass.Text) - 1;
+
             if (cls >= 0)
             {
                 SearchLevel.Enabled = true;
@@ -669,32 +681,36 @@ namespace winparser
                 SearchCategory.Items.Clear();
                 SearchCategory.Items.AddRange(Spells.SelectMany(x => x.Categories).Distinct().ToArray());
             }
-            //SearchCategory.Items.Add("AA");
-#if DEBUG
-            SearchCategory.Items.Add("Icon");
-#endif
+
+            SearchCategory.Items.Add("AA");
+
             SearchCategory.Items.Add("");
-            SearchText_TextChanged(sender, e);
+
+            Initiate_Search(sender, e);
         }
 
-        private void SearchText_TextChanged(object sender, EventArgs e)
+        private void Initiate_Search(object sender, EventArgs e)
         {
-            // reset timer every time the user presses a key
-            AutoSearch.Interval = (sender is TextBox) ? 800 : 400;
-            AutoSearch.Enabled = false;
-            AutoSearch.Enabled = true;
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
+            AutoSearch.Interval = ((sender is TextBox) ? 800 : 400);
+            if (sender is ComboBox)
+            {
+                if (((ComboBox)sender).SelectedIndex > 0)
+                {
+                    AutoSearch.Enabled = false;
+                    AutoSearch.Enabled = true;
+                }
+            }
+            else
+            {
+                AutoSearch.Enabled = false;
+                AutoSearch.Enabled = true;
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             SearchBrowser.ShowPrintPreviewDialog();
         }
-
 
     }
 }

@@ -138,70 +138,7 @@ namespace Everquest
         Skill_Attack = 193,
         Cancel_All_Aggro = 194,
         Stun_Resist_Chance = 195,
-        Taunt = 199,
-        Proc_Rate = 200,
-        AE_Taunt = 206,
-        Slay_Undead = 219,
-        Weapon_Damage_Bonus = 220,
-        Back_Block_Chance = 222,
-        Double_Riposte_Skill = 224,
-        Double_Attack_Skill = 225,
-        Persistent_Casting_AA = 229, // cast through stun
-        Lung_Capacity = 246,
-        Frontal_Backstab_Chance = 252,
-        Frontal_Backstab_Min_Damage = 253,
-        Shroud_Of_Stealth = 256,
-        Triple_Backstab_Chance = 258,
-        Combat_Stability = 259, // ac soft cap. AA and a few shaman spells
-        Song_Range = 270,
-        Flurry = 279,
-        Spell_Damage_Bonus = 286,
-        Dispel_Detrimental = 291,
-        Movement_Speed_AA = 271,
-        Critical_DoT_Chance = 273,
-        Critical_Heal_Chance = 274,
-        Double_Special_Attack_Chance = 283, // monk specials
-        Dragon_Punch_Knockback = 288,
-        Movement_Speed_Cap = 290,
-        Frontal_Stun_Resist_Chance = 293, // AA
-        Critical_Nuke_Chance = 294,
-        Archery_Damage = 301, // AA, not sure which
-        Avoid_Riposte_Chance = 304, 
-        Damage_Shield_Taken = 305,
-        Teleport_To_Bind = 309,
-        Invis = 314,
-        Shield_Block = 320,
-        Targets_Target_Hate = 321,
-        Gate_to_Home_City = 322,
-        Defensive_Proc = 323,
-        Crit_Hit_Damage = 330,
-        Summon_To_Corpse = 332,
-        XP_Gain = 337,
-        Casting_Trigger = 339,
-        Shield_Equip_Hate_Mod = 349, // AA
-        Mana_Burn = 350,
-        Current_Mana2 = 358,
-        Triple_Attack = 364,
-        Corruption_Counter = 369,
-        Corruption_Resist = 370,
-        Melee_Delay = 371,
-        Crit_DoT_Damage = 375,
-        Push = 379,
-        Cast_On_Spell = 383,
-        Healing_Taken = 393,
-        Healing_Taken2 = 394,
-        Crit_DoT_Chance = 395,
-        Pet_Duration = 398,
-        Twincast_Chance = 399,
-        Heal_From_Mana = 400,
-        Two_Hand_Blunt_Block_Chance = 405, // AA
-        Song_Effectiveness = 413,
-        Teleport_to_Caster_Anchor = 437,
-        Teleport_to_Player_Anchor = 438,
-        Lock_Aggro = 444,
-        Absorb_DoT_Damage = 450,
-        Absorb_Melee_Damage = 451,
-        Absorb_Spell_Damage = 452
+        Taunt = 199
     }
 
     public enum SpellSkill
@@ -630,7 +567,7 @@ namespace Everquest
         Scaled_Wolf = 356,
         Vampire = 360,
         Nightrage_Orphan = (360 << 16) + 1,
-        nSkeleton = 367,
+        Skeleton_ = 367,
         Drybone_Skeleton = (367 << 16) + 1,
         Frostbone_Skeleton = (367 << 16) + 2,
         Firebone_Skeleton = (367 << 16) + 3,
@@ -721,8 +658,8 @@ namespace Everquest
         Fire_Elemental3 = 477,
         Water_Elemental3 = 478,
         Alligator = 479,
-        New_Bear = 480,
-        New_Wolf = 482,
+        Bear_ = 480,
+        Wolf_ = 482,
         Spectre = 485,
         Banshee = 487,
         Banshee2 = 488,
@@ -932,6 +869,7 @@ namespace Everquest
         public bool PersistAfterDeath;
         public bool ShortDuration; // song window
         public bool CancelOnSit;
+        public int SPAIdx;
         public bool Sneaking;
         public int[] CategoryDescID; // most AAs don't have these set
         public string Deity;
@@ -1007,6 +945,8 @@ namespace Everquest
                     result.Add("Skill: " + FormatEnum(Skill));
             }
 
+            
+
             if (!String.IsNullOrEmpty(Deity))
                 result.Add("Deity: " + Deity);
 
@@ -1026,29 +966,29 @@ namespace Everquest
                 if (FocusID[i] > 0)
                     result.Add("Focus: [Item " + FocusID[i] + "]");
 
-            if (BetaOnly)
-                result.Add("Restriction: Beta Only");
+            //if (BetaOnly)
+            //    result.Add("Restriction: Beta Only");
 
-            if (CannotRemove)
-                result.Add("Restriction: Cannot Remove");
+            //if (CannotRemove)
+             //   result.Add("Restriction: Cannot Remove");
 
-            if (CastOutOfCombat)
-                result.Add("Restriction: Out of Combat"); // i.e. no aggro
+            //if (CastOutOfCombat)
+            //    result.Add("Restriction: Out of Combat"); // i.e. no aggro
 
-            if (CastInFastRegen)
-                result.Add("Restriction: In Fast Regen");
+            //if (CastInFastRegen)
+            //    result.Add("Restriction: In Fast Regen");
 
             if (Zone != SpellZoneRestrict.None)
                 result.Add("Restriction: " + Zone + " Only");
 
-            if (Sneaking)
-                result.Add("Restriction: Sneaking");
+            //if (Sneaking)
+            //    result.Add("Restriction: Sneaking");
 
-            if (CancelOnSit)
-                result.Add("Restriction: Cancel on Sit");
+            //if (CancelOnSit)
+            //    result.Add("Restriction: Cancel on Sit");
 
-            if ((int)CasterRestrict > 100)
-                result.Add("Restriction: " + FormatEnum(CasterRestrict));
+            //if ((int)CasterRestrict > 100)
+            //    result.Add("Restriction: " + FormatEnum(CasterRestrict));
 
             if (Target == SpellTarget.Directional_AE)
                 result.Add("Target: " + FormatEnum(Target) + " (" + ConeStartAngle + " to " + ConeEndAngle + " Degrees)");
@@ -1066,11 +1006,11 @@ namespace Everquest
             else if (Range > 0)
                 result.Add("Range: " + (MinRange > 0 ? MinRange + "' to " : "") + Range + "'");
 
-            if (RangeModFarDist != 0)
-                result.Add("Range Mod: " + (RangeModCloseMult * 100) + "% at " + RangeModCloseDist + "' to " + (RangeModFarMult * 100) + "% at " + RangeModFarDist + "'");
+            //if (RangeModFarDist != 0)
+            //    result.Add("Range Mod: " + (RangeModCloseMult * 100) + "% at " + RangeModCloseDist + "' to " + (RangeModFarMult * 100) + "% at " + RangeModFarDist + "'");
 
-            if (ViralRange > 0)
-                result.Add("Viral Range: " + ViralRange + "', Recast: " + MinViralTime + "s to " + MaxViralTime + "s");
+            //if (ViralRange > 0)
+            //    result.Add("Viral Range: " + ViralRange + "', Recast: " + MinViralTime + "s to " + MaxViralTime + "s");
 
             if (!Beneficial)
                 result.Add("Resist: " + ResistType + (ResistMod != 0 ? " " + ResistMod : "") + (MinResist > 0 ? ", Min: " + MinResist / 2f + "%" : "") + (MaxResist > 0 ? ", Max: " + MaxResist / 2f + "%" : "")); // + (!PartialResist ? ", No Partials" : ""));
@@ -1087,17 +1027,20 @@ namespace Everquest
 
             if (DurationTicks > 0)
                 result.Add("Duration: " + FormatTime(DurationTicks * 6) + " (" + DurationTicks + " ticks)" 
-                    //+ (Beneficial && ClassesMask != SpellClassesMask.BRD ? ", Extendable: " + (DurationExtendable ? "Yes" : "No") : "")
-                    //+ ", Dispelable: " + (Dispelable ? "Yes" : "No")
-                    + (!Beneficial && DurationTicks > 10 ? ", Allow Fast Regen: " + (AllowFastRegen ? "Yes" : "No") : "")  // it applies on <10 ticks, but there really is no need to show it
+             //       + (Beneficial && ClassesMask != SpellClassesMask.BRD ? ", Extendable: " + (DurationExtendable ? "Yes" : "No") : "")
+             //       + ", Dispelable: " + (Dispelable ? "Yes" : "No")
+             //       + (!Beneficial && DurationTicks > 10 ? ", Allow Fast Regen: " + (AllowFastRegen ? "Yes" : "No") : "")  // it applies on <10 ticks, but there really is no need to show it
                     + (PersistAfterDeath ? ", Persist After Death" : "")); // pretty rare, so only shown when it's used
             else if (AEDuration >= 2500)
                 result.Add("AE Waves: " + AEDuration / 2500);
+#if DEBUG
+            result.Add("SPA Index: " + SPAIdx);
+#endif
 
-            if (PushUp != 0)
-                result.Add("Push: " + PushBack + "' Up: " + PushUp + "'");
-            else if (PushBack != 0)
-                result.Add("Push: " + PushBack + "'");
+            //if (PushUp != 0)
+            //    result.Add("Push: " + PushBack + "' Up: " + PushUp + "'");
+            //else if (PushBack != 0)
+            //    result.Add("Push: " + PushBack + "'");
 
             if (HateMod != 0)
                 result.Add("Hate Mod: " + (HateMod > 0 ? "+" : "") + HateMod);
@@ -1114,8 +1057,8 @@ namespace Everquest
             if (Recourse != null)
                 result.Add("Recourse: " + Recourse);
 
-            if (Unknown != 0)
-                result.Add("Unknown: " + Unknown);
+            //if (Unknown != 0)
+            //    result.Add("Unknown: " + Unknown);
 
             //if (!String.IsNullOrEmpty(Category))
             //    result.Add("Category: " + Category);
@@ -1126,12 +1069,12 @@ namespace Everquest
 #if DEBUG
             if (!String.IsNullOrEmpty(YouCast))
                 result.Add("You Cast: " + YouCast);
-            if (!String.IsNullOrEmpty(OtherCast))
-                result.Add("Other Cast: " + OtherCast);
-            if (!String.IsNullOrEmpty(LandOnOther))
-                result.Add("Lands on Other: " + LandOnOther);
-            if (!String.IsNullOrEmpty(WearOffMessage))
-                result.Add("Wears Off: " + WearOffMessage);
+            //if (!String.IsNullOrEmpty(OtherCast))
+            //    result.Add("Other Cast: " + OtherCast);
+            //if (!String.IsNullOrEmpty(LandOnOther))
+            //    result.Add("Lands on Other: " + LandOnOther);
+            //if (!String.IsNullOrEmpty(WearOffMessage))
+            //    result.Add("Wears Off: " + WearOffMessage);
 #endif
             if (!String.IsNullOrEmpty(LandOnSelf))
                 result.Add("Lands on You: " + LandOnSelf);
@@ -1271,7 +1214,7 @@ namespace Everquest
 
         /// <summary>
         /// Parse a spell effect. Each spell has 12 effect slots. Devs refer to these as SPAs.
-        /// Attributes like ID, Skill, Extra, DurationTicks are referenced and should be set before
+        /// Attributes like ID, Skill, Extra, DurationTicks, SPAIdx are referenced and should be set before
         /// calling this function.
         /// </summary>
         public string ParseEffect(int spa, int base1, int base2, int max, int calc, int level, int minlevel)
@@ -1293,6 +1236,20 @@ namespace Everquest
             // some hp/mana/end/hate effects repeat for each tick of the duration
             string repeating = (DurationTicks > 0) ? " per tick" : null;
 
+            string spaString = String.Empty;
+            switch (SPAIdx)
+            {
+                case 922:
+                    spaString = ", returning it to you.";
+                    break;
+                case 923:
+                    spaString = ", returning it to you.";
+                    break;
+                case 924:
+                    spaString = ", returning it to your group.";
+                    break;
+            };
+
             // some effects are capped at a max level
             string maxlevel = (max > 0) ? String.Format(" up to level {0}", max) : null;
 
@@ -1303,7 +1260,8 @@ namespace Everquest
                 case 0:
                     if (base2 > 0)
                         return Spell.FormatCount("Current HP", value) + repeating + range + " (if " + Spell.FormatEnum((SpellTargetRestrict)base2) + ")";
-                    return Spell.FormatCount("Current HP", value, minvalue, level, minlevel) + repeating + range;
+
+                    return Spell.FormatCount("Current HP", value, minvalue, level, minlevel) + repeating + spaString + range;
                 case 1:
                     return Spell.FormatCount("AC", (int)(value / (100f / 29f)), (int)(minvalue / (100f / 29f)), level, minlevel);
                 case 2:
@@ -1681,6 +1639,8 @@ namespace Everquest
                     return String.Format("Dispell Effect: [Spell {0}]", base1);
                 case 199:
                     return Spell.FormatCount("Hate Transfer", base1);
+                case 200:
+                    return Spell.FormatCount("Hate", base1) + " per tick";
             }
 
             return String.Format("Unknown Effect: {0} Base1={1} Base2={2} Max={3} Calc={4} Value={5}", spa, base1, base2, max, calc, value);
@@ -1782,132 +1742,142 @@ namespace Everquest
             if (calc == 0)
                 return base1;
 
-            if (calc == 100)
+            if (calc == 100 || calc == 200 || calc == 400)
             {
                 if (max > 0 && base1 > max)
                     return max;
                 return base1;
             }
 
-            int change = 0;
+            int updownsign = 1;
+            int ubase = Math.Abs(base1);
 
+            if (max < 1 && max != 0)
+            {
+                // values are calculated down
+                updownsign = -1;
+            }
+            int value = ubase;
             switch (calc)
             {
                 case 100:
                     break;
                 case 101:
-                    change = level / 2;
+                    value = updownsign * (ubase + (level / 2));
                     break;
                 case 102:
-                    change = level;
+                    value = updownsign * (ubase + level);
                     break;
                 case 103:
-                    change = level * 2;
+                    value = updownsign * (ubase + (level * 2));
                     break;
                 case 104:
-                    change = level * 3;
+                    value = updownsign * (ubase + (level * 3));
                     break;
                 case 105:
-                    change = level * 4;
+                    value = updownsign * (ubase + (level * 4));
                     break;
                 case 107:
-                    change = -1 * tick;
+                    value = updownsign * (ubase + tick);
                     break;
                 case 108:
-                    change = -2 * tick;
+                    value = updownsign * (ubase + (2 * tick));
                     break;
                 case 109:
-                    change = level / 4;
+                    value = updownsign * (ubase +  (level / 4));
                     break;
                 case 110:
-                    change = level / 6;
+                    value = ubase + (level / 6);
                     break;
                 case 111:
-                    if (level > 16) change = (level - 16) * 6;
+                    if (level > 16) value = updownsign * (ubase + ((level - 16) * 6));
                     break;
                 case 112:
-                    if (level > 24) change = (level - 24) * 8;
+                    if (level > 24) value = updownsign * (ubase + ((level - 24) * 8));
                     break;
                 case 113:
-                    if (level > 34) change = (level - 34) * 10;
+                    if (level > 34) value = updownsign * (ubase + ((level - 34) * 10));
                     break;
                 case 114:
-                    if (level > 44) change = (level - 44) * 15;
+                    if (level > 44) value = updownsign * (ubase + ((level - 44) * 15));
                     break;
                 case 115:
-                    if (level > 15) change = (level - 15) * 7;
+                    if (level > 15) value = updownsign * (ubase + ((level - 15) * 7));
                     break;
                 case 116:
-                    if (level > 24) change = (level - 24) * 10;
+                    if (level > 24) value = ubase + ((level - 24) * 10);
                     break;
                 case 117:
-                    if (level > 34) change = (level - 34) * 13;
+                    if (level > 34) value = ubase + ((level - 34) * 13);
                     break;
                 case 118:
-                    if (level > 44) change = (level - 44) * 20;
+                    if (level > 44) value = ubase + ((level - 44) * 20);
                     break;
                 case 119:
-                    change = level / 8;
+                    value = ubase + (level / 8);
                     break;
                 case 120:
-                    change = -5 * tick;
+                    value = updownsign * (ubase + (5 * tick));
                     break;
                 case 121:
-                    change = level / 3;
+                    value = ubase + (level / 3);
                     break;
                 case 122:
-                    change = -12 * tick;
+                    int tick_remain = tick - 1;
+                    if (tick_remain < 0)
+                        tick_remain = 0;
+                    value = updownsign * (base1 - (12 * tick_remain));
                     break;
                 case 123:
                     // random in range
-                    change = (Math.Abs(max) - Math.Abs(base1)) / 2;
+                    value = (Math.Abs(max) - ubase) / 2;
                     break;
                 case 124:
-                    if (level > 50) change = (level - 50);
+                    if (level > 50) value = updownsign * (ubase + ((level - 50)));
                     break;
                 case 125:
-                    if (level > 50) change = (level - 50) * 2;
+                    if (level > 50) value = updownsign * (ubase + ((level - 50) * 2));
                     break;
                 case 126:
-                    if (level > 50) change = (level - 50) * 3;
+                    if (level > 50) value = updownsign * (ubase + ((level - 50) * 3));
                     break;
                 case 127:
-                    if (level > 50) change = (level - 50) * 4;
+                    if (level > 50) value = updownsign * (ubase + ((level - 50) * 4));
                     break;
                 case 128:
-                    if (level > 50) change = (level - 50) * 5;
+                    if (level > 50) value = updownsign * (ubase + ((level - 50) * 5));
                     break;
                 case 129:
-                    if (level > 50) change = (level - 50) * 10;
+                    if (level > 50) value = updownsign * (ubase + ((level - 50) * 10));
                     break;
                 case 130:
-                    if (level > 50) change = (level - 50) * 15;
+                    if (level > 50) value = updownsign * (ubase + ((level - 50) * 15));
                     break;
                 case 131:
-                    if (level > 50) change = (level - 50) * 20;
+                    if (level > 50) value = updownsign * (ubase + ((level - 50) * 20));
                     break;
                 case 132:
-                    if (level > 50) change = (level - 50) * 25;
+                    if (level > 50) value = updownsign * (ubase + ((level - 50) * 25));
                     break;
                 case 139:
-                    if (level > 30) change = (level - 30) / 2;
+                    if (level > 30) value = updownsign * (ubase + ((level - 30) / 2));
                     break;
                 case 140:
-                    if (level > 30) change = (level - 30);
+                    if (level > 30) value = updownsign * (ubase + (level - 30));
                     break;
                 case 141:
-                    if (level > 30) change = 3 * (level - 30) / 2;
+                    if (level > 30) value = updownsign * (ubase + (3 * (level - 30) / 2));
                     break;
                 case 142:
-                    if (level > 30) change = 2 * (level - 60);
+                    if (level > 30) value = updownsign * (ubase + (2 * (level - 60)));
                     break;
                 case 143:
-                    change = 3 * level / 4;
+                    value = updownsign * (ubase + (3 * level / 4));
                     break;
 
                 default:
                     if (calc > 0 && calc < 1000)
-                        change = level * calc;
+                        value = ubase + (level * calc);
 
                     // 1000..1999 variable by tick
                     // e.g. splort (growing): Effect=0 Base1=1 Base2=0 Max=0 Calc=1035
@@ -1918,20 +1888,31 @@ namespace Everquest
                     // e.g. Bleeding Bite: Base1=-1000 Base2=0 Max=0 Calc=1100 (The damage done will decrease in severity over time.)
                     // e.g. Blood Rites: Base1=-1500 Base2=0 Max=0 Calc=1999
                     if (calc >= 1000 && calc < 2000)
-                        change = tick * (calc - 1000) * -1;
-
+                        value = updownsign * (ubase - (tick * (calc - 1000)));
                     // 2000..2999 variable by level
                     if (calc >= 2000)
-                        change = level * (calc - 2000);
+                        value = ubase + (level * (calc - 2000));
                     break;
             }
 
-            int value = Math.Abs(base1) + change;
 
-            if (max != 0 && value > Math.Abs(max))
-                value = Math.Abs(max);
+            // now check result against the allowed maximum
+            if (max != 0)
+            {
+                    if (updownsign == 1)
+                    {
+                            if (value > max)
+                                    value = max;
+                    }
+                    else
+                    {
+                            if (value < max)
+                                    value = max;
+                    }
+            }
 
-            if (base1 < 0)
+            
+            if (base1 < 0 && value > 0)
                 value = -value;
 
             return value;
@@ -2070,30 +2051,44 @@ namespace Everquest
             //Dictionary<int, Spell> listByGroup = new Dictionary<int, Spell>(30000);
 
             // load description text file
+            bool dbfile = descPath.Contains("dbstr_us");
             Dictionary<string, string> desc = new Dictionary<string, string>(50000);
             if (File.Exists(descPath))
                 using (StreamReader text = File.OpenText(descPath))
                     while (!text.EndOfStream)
                     {
                         string line = text.ReadLine();
-                        string[] fields = line.Split('^');
-                        if (fields.Length < 3)
-                            continue;
-
-                        // 0 = id in type
-                        // 1 = type
-                        // 2 = description
-                        // type 1 = AA names
-                        // type 4 = AA desc
-                        // type 5 = spell categories
-                        // type 6 = spell desc
-                        // type 7 = lore groups
-                        // type 11 = illusions
-                        // type 12 = body type
-                        // type 16 = aug slot desc
-                        // type 18 = currency
-                        desc[fields[1] + "/" + fields[0]] = fields[2].Trim();
+                        if (dbfile)
+                        {
+                            string[] fields = line.Split('^');
+                            if (fields.Length < 3)
+                                continue;
+                            // 0 = id in type
+                            // 1 = type
+                            // 2 = description
+                            // type 1 = AA names
+                            // type 4 = AA desc
+                            // type 5 = spell categories
+                            // type 6 = spell desc
+                            // type 7 = lore groups
+                            // type 11 = illusions
+                            // type 12 = body type
+                            // type 16 = aug slot desc
+                            // type 18 = currency
+                            desc[fields[1] + "/" + fields[0]] = fields[2].Trim();
+                        }
+                        else
+                        {
+                            int index_start = line.IndexOf(" ");
+                            if (index_start < 2)
+                                continue;
+                            desc["6/" + line.Substring(0, index_start)] = line.Substring(index_start).Trim();
+                        }
                     }
+
+
+
+
 
 
             // load spell definition file
@@ -2103,7 +2098,7 @@ namespace Everquest
                     {
                         string line = text.ReadLine();
                         string[] fields = line.Split('^');
-                        Spell spell = LoadSpell(fields);
+                        Spell spell = LoadSpell(fields, dbfile);
 
 #if !LimitMemoryUse
                         // all spells can be grouped into up to 2 categories (type 5 in db_str)
@@ -2118,7 +2113,7 @@ namespace Everquest
                                 cat.Add(c1 + "/" + c2);
 
                             // sub category 2
-                            if (desc.TryGetValue("5/" + spell.CategoryDescID[2], out c2) && !c2.StartsWith("Timer"))                            
+                            if (desc.TryGetValue("5/" + spell.CategoryDescID[2], out c2) && !c2.StartsWith("Timer"))
                                 cat.Add(c1 + "/" + c2);
 
                             // general category if no subcategories are defined
@@ -2215,7 +2210,7 @@ namespace Everquest
         /// <summary>
         /// Parse a spell from a set of spell fields.
         /// </summary>
-        static Spell LoadSpell(string[] fields)
+        static Spell LoadSpell(string[] fields, bool dbfile = false)
         {
             int MaxLevel = 65;
             int MinLevel = 65;
@@ -2275,7 +2270,7 @@ namespace Everquest
             //Casting Animation = fields[120];
             //Target Animation = fields[121];
             //Travel Type = fields[122];
-            //SPA ID = fields[123];
+            spell.SPAIdx = ParseInt(fields[123]);
             spell.CancelOnSit = ParseBool(fields[124]);
 
             // 125..141 deity casting restrictions
@@ -2301,8 +2296,16 @@ namespace Everquest
                 spell.Recourse = String.Format("[Spell {0}]", spell.RecourseID);
             //Small Targets Only = fields[152];
             //Persistent particle effects = fields [153];
+
             spell.ShortDuration = ParseBool(fields[154]);
+
             spell.DescID = ParseInt(fields[155]);
+#if DEBUG
+            if (dbfile)
+                spell.DescID = spell.ID;
+            else
+                spell.DescID = 40000 + spell.ID;
+#endif
             spell.CategoryDescID[0] = ParseInt(fields[156]);
             spell.CategoryDescID[1] = ParseInt(fields[157]);
             spell.CategoryDescID[2] = ParseInt(fields[158]);
