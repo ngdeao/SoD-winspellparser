@@ -276,7 +276,7 @@ namespace winparser
                     html.AppendFormat("Description ({0}):<br/>", spell.DescID);
 #else
                 if (spell.Desc != null)
-                    html.AppendFormat("Description {0}: {1}", spell.DescID, spell.Desc);
+                    html.AppendFormat("Description: {0}", spell.Desc);
                 else if (spell.DescID > 0)
                     html.AppendFormat("Description {0}:", spell.DescID);
 #endif

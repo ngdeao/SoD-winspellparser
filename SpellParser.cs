@@ -1263,9 +1263,9 @@ namespace Everquest
 
                     return Spell.FormatCount("Current HP", value, minvalue, level, minlevel) + repeating + spaString + range;
                 case 1:
-                    return Spell.FormatCount("AC", (int)(value / (100f / 29f)), (int)(minvalue / (100f / 29f)), level, minlevel);
+                    return Spell.FormatCount("AC", value * 300 / 1000, minvalue * 300 / 1000, level, minlevel);
                 case 2:
-                    return Spell.FormatCount("ATK", value, minvalue, level, minlevel) + range;
+                    return Spell.FormatCount("ATK", (int)( value * 4.0f / 3.0f ),(int) (minvalue * 4.0f / 3.0f ), level, minlevel) + range;
                 case 3:
                     return Spell.FormatPercent("Movement Speed", value, minvalue, minlevel, level);
                 case 4:
@@ -1424,7 +1424,7 @@ namespace Everquest
                 case 77:
                     return "Locate Corpse";
                 case 78:
-                    return String.Format("Absorb Spell Damage: {0} hit points", value);
+                    return String.Format("Absorb Magical Damage: {0} hit points", value);
                 case 79:
                     // delta hp for heal/nuke, non repeating
                     if (base2 > 0)
@@ -1522,7 +1522,7 @@ namespace Everquest
                 case 119:
                     return Spell.FormatPercent("Melee Haste v3", value);
                 case 120:
-                    return Spell.FormatPercent("Healing Taken", base1); // not range
+                    return Spell.FormatPercent("Spell Damage Taken", base1); // not range
                 case 121:
                     // damages the target whenever it hits something
                     return Spell.FormatCount("Reverse Damage Shield", -value);
@@ -2082,7 +2082,11 @@ namespace Everquest
                             int index_start = line.IndexOf(" ");
                             if (index_start < 2)
                                 continue;
-                            desc["6/" + line.Substring(0, index_start)] = line.Substring(index_start).Trim();
+                            int type_val = ParseInt(line.Substring(0, index_start));
+                            if (type_val > 36000 && type_val < 40000)
+                                desc["5/" + line.Substring(0, index_start)] = line.Substring(index_start).Trim();
+                            else if (type_val > 39000)
+                                desc["6/" + line.Substring(0, index_start)] = line.Substring(index_start).Trim();
                         }
                     }
 
@@ -2212,7 +2216,7 @@ namespace Everquest
         /// </summary>
         static Spell LoadSpell(string[] fields, bool dbfile = false)
         {
-            int MaxLevel = 65;
+            int MaxLevel = 59;
             int MinLevel = 65;
 
             Spell spell = new Spell();
@@ -2300,12 +2304,7 @@ namespace Everquest
             spell.ShortDuration = ParseBool(fields[154]);
 
             spell.DescID = ParseInt(fields[155]);
-#if DEBUG
-            if (dbfile)
-                spell.DescID = spell.ID;
-            else
-                spell.DescID = 40000 + spell.ID;
-#endif
+
             spell.CategoryDescID[0] = ParseInt(fields[156]);
             spell.CategoryDescID[1] = ParseInt(fields[157]);
             spell.CategoryDescID[2] = ParseInt(fields[158]);
