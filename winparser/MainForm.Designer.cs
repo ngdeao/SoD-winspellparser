@@ -31,7 +31,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.panel1 = new System.Windows.Forms.Panel();
-            this.button1 = new System.Windows.Forms.Button();
+            this.PrintBtn = new System.Windows.Forms.Button();
             this.ShowRelated = new System.Windows.Forms.CheckBox();
             this.SearchEffectSlot = new System.Windows.Forms.ComboBox();
             this.label7 = new System.Windows.Forms.Label();
@@ -53,12 +53,14 @@
             this.SearchBrowser = new System.Windows.Forms.WebBrowser();
             this.AutoSearch = new System.Windows.Forms.Timer(this.components);
             this.ToolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.ResetBtn = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.button1);
+            this.panel1.Controls.Add(this.ResetBtn);
+            this.panel1.Controls.Add(this.PrintBtn);
             this.panel1.Controls.Add(this.ShowRelated);
             this.panel1.Controls.Add(this.SearchEffectSlot);
             this.panel1.Controls.Add(this.label7);
@@ -83,15 +85,15 @@
             this.panel1.Size = new System.Drawing.Size(247, 367);
             this.panel1.TabIndex = 0;
             // 
-            // button1
+            // PrintBtn
             // 
-            this.button1.Location = new System.Drawing.Point(143, 328);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(91, 27);
-            this.button1.TabIndex = 19;
-            this.button1.Text = "Print";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.PrintBtn.Location = new System.Drawing.Point(143, 274);
+            this.PrintBtn.Name = "PrintBtn";
+            this.PrintBtn.Size = new System.Drawing.Size(91, 27);
+            this.PrintBtn.TabIndex = 19;
+            this.PrintBtn.Text = "Print";
+            this.PrintBtn.UseVisualStyleBackColor = true;
+            this.PrintBtn.Click += new System.EventHandler(this.button1_Click);
             // 
             // ShowRelated
             // 
@@ -197,7 +199,7 @@
             // DisplayTable
             // 
             this.DisplayTable.AutoSize = true;
-            this.DisplayTable.Location = new System.Drawing.Point(13, 261);
+            this.DisplayTable.Location = new System.Drawing.Point(79, 236);
             this.DisplayTable.Name = "DisplayTable";
             this.DisplayTable.Size = new System.Drawing.Size(54, 19);
             this.DisplayTable.TabIndex = 14;
@@ -211,14 +213,14 @@
             this.label4.Location = new System.Drawing.Point(12, 215);
             this.label4.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(61, 15);
+            this.label4.Size = new System.Drawing.Size(64, 15);
             this.label4.TabIndex = 12;
-            this.label4.Text = "Display As";
+            this.label4.Text = "Display As:";
             // 
             // SearchNotes
             // 
             this.SearchNotes.AutoSize = true;
-            this.SearchNotes.Location = new System.Drawing.Point(27, 310);
+            this.SearchNotes.Location = new System.Drawing.Point(140, 313);
             this.SearchNotes.Margin = new System.Windows.Forms.Padding(0);
             this.SearchNotes.Name = "SearchNotes";
             this.SearchNotes.Size = new System.Drawing.Size(16, 15);
@@ -250,7 +252,7 @@
             // 
             // SearchBtn
             // 
-            this.SearchBtn.Location = new System.Drawing.Point(12, 328);
+            this.SearchBtn.Location = new System.Drawing.Point(12, 307);
             this.SearchBtn.Name = "SearchBtn";
             this.SearchBtn.Size = new System.Drawing.Size(91, 27);
             this.SearchBtn.TabIndex = 15;
@@ -312,6 +314,17 @@
             this.AutoSearch.Interval = 500;
             this.AutoSearch.Tick += new System.EventHandler(this.SearchBtn_Click);
             // 
+            // ResetBtn
+            // 
+            this.ResetBtn.Enabled = false;
+            this.ResetBtn.Location = new System.Drawing.Point(12, 274);
+            this.ResetBtn.Name = "ResetBtn";
+            this.ResetBtn.Size = new System.Drawing.Size(91, 27);
+            this.ResetBtn.TabIndex = 20;
+            this.ResetBtn.Text = "Reset";
+            this.ResetBtn.UseVisualStyleBackColor = true;
+            this.ResetBtn.Click += new System.EventHandler(this.ResetBtn_Click);
+            // 
             // MainForm
             // 
             this.AcceptButton = this.SearchBtn;
@@ -355,8 +368,9 @@
         private System.Windows.Forms.ComboBox SearchEffectSlot;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.CheckBox ShowRelated;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button PrintBtn;
         private System.Windows.Forms.Label SearchNotes;
+        private System.Windows.Forms.Button ResetBtn;
 
     }
 }

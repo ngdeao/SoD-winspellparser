@@ -76,14 +76,22 @@ namespace winparser
             html.AppendFormat("<p>Loaded <strong>{0}</strong> spells from {1}.</p></html>", Spells.Count, SpellPath);
             if (i > 0)
                 html.AppendFormat("<p>Loaded <strong>{0}</strong> spell descriptions from {1}.</p></html>", i, descPath);
-            html.Append("<p>Use the search button to perform a search on this spell file based on the filters on the left.");
+            html.Append("<p>Use the search button to perform a search on this spell file, based on the filters on the left.");
             //html.Append("<p>Use the compare button to compare two different spell files and show the differences. e.g. test server vs live server spells.");
-            html.Append("<p>Tip: You can use the up/down arrow keys when the cursor is in the Class/Has Effect/Category fields to quickly try different searches.");
+            //html.Append("<p>Tip: You can use the up/down arrow keys when the cursor is in the Class/Has Effect/Category fields to quickly try different searches.");
             //html.Append("<p>Tip: This parser is an open source application and accepts updates and corrections here: <a href='http://code.google.com/p/eqspellparser/' class='ext' target='_top'>http://code.google.com/p/eqspellparser/</a>");
 
             ShowHtml(html);
+            PrintBtn.Enabled = false;
         }
 
+        public void resetHTML()
+        {
+            var html = InitHtml();
+            html.Append("<p>Use the search button to perform a search, based on the filters on the left.");
+            //html.Append("<p>Tip: You can use the up/down arrow keys when the cursor is in the Class/Has Effect/Category fields to quickly try different searches.");
+            ShowHtml(html);
+        }
 
 
         /// <summary>
@@ -92,6 +100,7 @@ namespace winparser
         public void Search()
         {
             AutoSearch.Enabled = false;
+            ResetBtn.Enabled = true;
 
             var text = SearchText.Text.Trim();
             int id = 0;
@@ -208,10 +217,12 @@ namespace winparser
 
             if (Results.Count == 0)
             {
-                html.Append("<p><strong>Sorry, no matching spells were found.</strong></p><p>You may have made the filters too restrictive (including levels), accidentally defined conflicting filters, or left one of the filters filled in from a previous search. Try filtering by just one or two filters.</p>");
+                html.Append("<p><strong>Sorry, no matching spells were found.</strong></p><p>You may have made the filters too restrictive (including levels), accidentally defined conflicting filters, or left one of the filters filled in from a previous search.</br></br>Try filtering by just one or two filters.</p>");
+                PrintBtn.Enabled = false;
             }
             else
             {
+                PrintBtn.Enabled = true;
                 if (Results.Count > 2000)                 
                     html.Append("<p>Only the first 2000 are shown.</p>");
 
@@ -246,7 +257,7 @@ namespace winparser
 
         private void ShowAsText(IEnumerable<Spell> list, Func<Spell, bool> visible, StringBuilder html)
         {
-            string apppath = System.Windows.Forms.Application.StartupPath;
+            //string apppath = System.Windows.Forms.Application.StartupPath;
             foreach (var spell in list)
             {
 
@@ -256,8 +267,6 @@ namespace winparser
                         html.AppendFormat("<p id='spell{0}' class='spell group{1} {3}'>{4}<br/>", spell.ID, spell.GroupID, spell.Name, visible(spell) ? "" : "hidden", IconImage(spell.Icon, spell.Name, spell.ID));
                     else
                         html.AppendFormat("<p id='spell{0}' class='spell group{1} {3}'><strong>{2}</strong>     (Spell ID: {0})<br/>", spell.ID, spell.GroupID, spell.Name, visible(spell) ? "" : "hidden");
-                    // for testing
-                    //html.AppendFormat("<p id='spell{0}' class='spell group{1} {3}'>{0}^1^{2}<br/>", spell.ID, spell.GroupID, spell.Name, visible(spell) ? "" : "hidden");
                 }
                 else
                 {
@@ -278,7 +287,7 @@ namespace winparser
                 if (spell.Desc != null)
                     html.AppendFormat("Description: {0}", spell.Desc);
                 else if (spell.DescID > 0)
-                    html.AppendFormat("Description {0}:", spell.DescID);
+                    html.AppendFormat("Description: {0}", spell.DescID);
 #endif
                 html.Append("</p>");
 
@@ -674,6 +683,7 @@ namespace winparser
 
                 SearchCategory.Items.Clear();
                 SearchCategory.Items.AddRange(cat.ToArray());
+                SearchBtn.Select();
             }
             else
             {
@@ -691,13 +701,14 @@ namespace winparser
 
         private void Initiate_Search(object sender, EventArgs e)
         {
-            AutoSearch.Interval = ((sender is TextBox) ? 800 : 400);
+            AutoSearch.Interval = ((sender is TextBox) ? 2000 : 400);
             if (sender is ComboBox)
             {
                 if (((ComboBox)sender).SelectedIndex > 0)
                 {
                     AutoSearch.Enabled = false;
                     AutoSearch.Enabled = true;
+                    SearchBtn.Select();
                 }
             }
             else
@@ -710,6 +721,24 @@ namespace winparser
         private void button1_Click(object sender, EventArgs e)
         {
             SearchBrowser.ShowPrintPreviewDialog();
+        }
+
+        private void ResetBtn_Click(object sender, EventArgs e)
+        {
+            AutoSearch.Enabled = false;
+            SearchText.Text = "";
+            SearchText.Select();
+            SearchLevel.Text = "1-65";
+            SearchNotes.Text = "...";
+            SearchClass.SelectedIndex = -1;
+            SearchEffect.SelectedIndex = -1;
+            SearchEffectSlot.SelectedIndex = -1;
+            SearchCategory.SelectedIndex = 0;
+            resetHTML();
+            AutoSearch.Enabled = false;
+            ResetBtn.Enabled = false;
+            PrintBtn.Enabled = false;
+            
         }
 
     }
