@@ -794,7 +794,84 @@ namespace Everquest
         Lifetap = 6,
         Transport = 8
     }
+    // For items with spell effects associated
+    // put spell in format __Spell_###___
+    // __ is replaced by " (effect: ["
+    // ___ is replaced by "]) "
+    // Resulting in [Spell ###]
+    // "www" = (worn)
+    // "ccc" = (combat)
+    // 
+    // The [Spell ###] will parse out as a link to the associated spell.
+    // replace _s_ with 's_
 
+    public enum Items
+    {
+        Bat_Wing = 6002,
+        Water_Flask = 6011,
+        Summoned_Bread = 7001,
+        Summoned_Water_Flask = 7002,
+        Summoned_Dagger = 7003,
+        Summoned_Bandages = 7004,
+        Dimensional_Pocket = 7005,
+        Summoned_Staff_of_Tracing = 7006,
+        Summoned_Fang = 7007,
+        Summoned_Heatstone__Spell_679___www = 7008,
+        Summoned_Staff_of_Warding = 7009,
+        Summoned_Spear_of_Warding = 7010,
+        Summoned_Arrow = 7011,
+        Summoned_Miraculous_Drink = 7012,
+        Summoned_Miraculous_Food = 7013,
+        Summoned_Staff_of_Runes = 7014,
+        Summoned_Coldstone__Spell_539___www = 7015,
+        Summoned_Sword_of_Runes__Spell_2688___ccc = 7016,
+        Dimensional_Hole = 7017,
+        Summoned_Staff_of_Symbols = 7018,
+        Summoned_Shard_of_the_Core__Spell_539___www = 7019,
+        Summoned_Ring_of_Velocity = 7020,
+        Summoned_Ring_of_Flight__Spell_261___ = 7021,
+        Summoned_Modulating_Rod__Spell_1024___ = 7022,
+        Summoned_Throwing_Dagger = 7025,
+        Summoned_Dagger_of_Symbols__Spell_2688___ccc = 7026,
+        Summoned_Wisp = 7028,
+        Summoned_Globe_of_Fireflies = 7031,
+        Summoned_Halo_of_Light = 7032,
+        Summoned_Bauble_of_Battle = 7034,
+        Bloodstone = 10019,
+        Jasper = 10020,
+        Amber =	10022,
+        Pearl =	10024,
+        Cat_s_Eye_Agate	= 10026,
+        Peridot = 10028,
+        Opal = 10030,
+        Fire_Opal = 10031,
+        Ruby = 10035,
+        Summoned_Starshine = 10095,
+        Summoned_Spectral_Cap = 13663,
+        Summoned_Spectral_Sleeves = 13664,
+        Summoned_Spectral_Robe = 13665,
+        Summoned_Spectral_Bracelet = 13666,
+        Summoned_Spectral_Pantaloons = 13667,
+        Summoned_Spectral_Slippers = 13668,
+        Summoned_Spectral_Mits = 13669,
+        Stormkeep_Blasting_Powder = 14291,
+        Silver_Bar = 16500,
+        Electrum_Bar = 16501,
+        Gold_Bar = 16502,
+        Platinum_Bar = 16503,
+        Enchanted_Silver_Bar = 16504,
+        Enchanted_Electrum_Bar = 16505,
+        Enchanted_Gold_Bar = 16506,
+        Enchanted_Platinum_Bar = 16507,
+        Summoned_Gruplok_Collar = 19002,
+        Summoned_Cat_s_Eye_Agate = 31288,
+
+        Summoned_Bloodstone	= 31289,
+        Summoned_Jasper = 31290,
+        Summoned_Peridot = 31291,
+        Summoned_Heartseeker_Arrow = 31297,
+        Spiderkin_Silk__Spell_303___ = 32008
+    }
 
     #endregion
 
@@ -944,6 +1021,9 @@ namespace Everquest
                 else if ((int)Skill != 98) // 98 might be for AA only
                     result.Add("Skill: " + FormatEnum(Skill));
             }
+            if (Categories != null && Categories.GetLength(0) > 0)
+                result.Add("Category: " + Categories[0].ToString());
+
 
             
 
@@ -960,7 +1040,12 @@ namespace Everquest
 
             for (int i = 0; i < ConsumeItemID.Length; i++)
                 if (ConsumeItemID[i] > 0)
-                    result.Add("Consumes: [Item " + ConsumeItemID[i] + "] x " + ConsumeItemCount[i]);
+                {
+                    if (ConsumeItemCount[i] > 1)
+                        result.Add("Consumes: " + Spell.FormatEnumItem((Items)ConsumeItemID[i]) + " x " + ConsumeItemCount[i]);
+                    else
+                        result.Add("Consumes: " + Spell.FormatEnumItem((Items)ConsumeItemID[i]));
+                }
 
             for (int i = 0; i < FocusID.Length; i++)
                 if (FocusID[i] > 0)
@@ -1240,13 +1325,13 @@ namespace Everquest
             switch (SPAIdx)
             {
                 case 922:
-                    spaString = ", returning it to you.";
+                    spaString = ", healing you.";
                     break;
                 case 923:
-                    spaString = ", returning it to you.";
+                    spaString = ", healing your pet.";
                     break;
                 case 924:
-                    spaString = ", returning it to your group.";
+                    spaString = ", healing your group.";
                     break;
             };
 
@@ -1265,7 +1350,7 @@ namespace Everquest
                 case 1:
                     return Spell.FormatCount("AC", value * 300 / 1000, minvalue * 300 / 1000, level, minlevel);
                 case 2:
-                    return Spell.FormatCount("ATK", (int)( value * 4.0f / 3.0f ),(int) (minvalue * 4.0f / 3.0f ), level, minlevel) + range;
+                    return Spell.FormatCount("ATK", (int)value,(int) minvalue, level, minlevel) + range;
                 case 3:
                     return Spell.FormatPercent("Movement Speed", value, minvalue, minlevel, level);
                 case 4:
@@ -1340,7 +1425,10 @@ namespace Everquest
                 case 32:
                     // calc 100 = summon a stack? (based on item stack size) Pouch of Quellious, Quiver of Marr
                     //return String.Format("Summon: [Item {0}] x {1} {2} {3}", base1, calc, max, base2);
-                    return String.Format("Summon: [Item {0}]", base1);
+                    if (max > 1)
+                        return String.Format("Summon x {1}: {0}", Spell.FormatEnumItem((Items)base1), max);
+                    else
+                        return String.Format("Summon: {0}", Spell.FormatEnumItem((Items)base1));
                 case 33:
                     return String.Format("Summon Pet: {0}", Extra);
                 case 35:
@@ -1958,6 +2046,13 @@ namespace Everquest
                 type = Regex.Replace(type, @"\d+$", ""); // remove numeric suffix on duplicate enums undead3/summoned3/etc
             return type;
         }
+        static public string FormatEnumItem(Enum e)
+        {
+            string type = e.ToString().Replace("Summoned", "Summoned:").Replace("_s_", "'s_").Replace("___", "] ").Replace("__", " [").Replace("ccc", " (combat)").Replace("www", " (worn)").Replace("_", " ").Trim();
+            if (Regex.IsMatch(type, @"^-?\d+$"))
+                return "[Item " + type + "]"; // undefined numeric enum
+            return type;
+        }
 
         static private string FormatTime(float seconds)
         {
@@ -2216,7 +2311,7 @@ namespace Everquest
         /// </summary>
         static Spell LoadSpell(string[] fields, bool dbfile = false)
         {
-            int MaxLevel = 59;
+            int MaxLevel = 65;
             int MinLevel = 65;
 
             Spell spell = new Spell();
@@ -2308,6 +2403,16 @@ namespace Everquest
             spell.CategoryDescID[0] = ParseInt(fields[156]);
             spell.CategoryDescID[1] = ParseInt(fields[157]);
             spell.CategoryDescID[2] = ParseInt(fields[158]);
+            if (spell.CategoryDescID[0] == 0 && spell.CategoryDescID[1] == 0 && spell.CategoryDescID[2] == 0)
+            {
+                // If all 3 are set to 0, then likely an AA.  
+                // Set the level field for useable classes to 254, if set to 1, to match AA ident.
+                for (int i = 0; i < spell.Levels.Length; i++)
+                {
+                    if (spell.Levels[i] == 1)
+                        spell.Levels[i] = 254;
+                }
+            }
             // 159 NPC Does not Require LoS
             // 160 Feedbackable (Triggers spell damage shield)
             spell.Reflectable = ParseBool(fields[161]);
