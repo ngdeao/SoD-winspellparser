@@ -58,8 +58,10 @@ namespace winparser
                 Status.Text = "spells_us.txt was not found. Use the Open button or copy a file into " + Directory.GetCurrentDirectory();
             else
             {
+                listView1.MultiSelect = false;
                 item.EnsureVisible();
                 item.Selected = true;
+                listView1.MultiSelect = true;
             }
         }
 
@@ -80,7 +82,7 @@ namespace winparser
         {
             var dir = new DirectoryInfo(".");
             openFileDialog = new OpenFileDialog();
-            openFileDialog.InitialDirectory = dir.Name.ToString();
+            //openFileDialog.InitialDirectory = dir.Name.ToString();
             openFileDialog.FileName = "spells_us.txt";
             openFileDialog.Filter = "Spells Files (*.txt)|*.txt|All Files (*.*)|*.*";
             openFileDialog.FilterIndex = 1;
@@ -91,7 +93,7 @@ namespace winparser
                 string pathname = System.IO.Path.GetDirectoryName(filename);
                 string thisfile = System.IO.Path.GetFileName(filename);
                 dir = new DirectoryInfo(pathname);
-                var files = dir.GetFiles(thisfile);
+                var files = dir.GetFiles(thisfile,SearchOption.AllDirectories);
                 ListViewItem item = null;
                 foreach (var f in files)
                 {
@@ -99,14 +101,15 @@ namespace winparser
                     item.SubItems.Add(f.Length.ToString());
                     item.SubItems.Add(CountFields(f.Directory + "\\" + f.Name).ToString());
                     listView1.Items.Add(item);
+                    if (item.Text.ToString() == filename)
+                    {
+                        listView1.MultiSelect = false;
+                        item.EnsureVisible();
+                        item.Selected = true;
+                        listView1.MultiSelect = true;
+                    }
                 }
-                if (item != null)
-                {
-                    listView1.MultiSelect = false;
-                    item.EnsureVisible();
-                    item.Selected = true;
-                    listView1.MultiSelect = true;
-                }
+                listView1.Select();
             }
         }
 

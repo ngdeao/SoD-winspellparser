@@ -31,6 +31,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.panel1 = new System.Windows.Forms.Panel();
+            this.ResetBtn = new System.Windows.Forms.Button();
             this.PrintBtn = new System.Windows.Forms.Button();
             this.ShowRelated = new System.Windows.Forms.CheckBox();
             this.SearchEffectSlot = new System.Windows.Forms.ComboBox();
@@ -53,7 +54,6 @@
             this.SearchBrowser = new System.Windows.Forms.WebBrowser();
             this.AutoSearch = new System.Windows.Forms.Timer(this.components);
             this.ToolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.ResetBtn = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -84,6 +84,17 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(247, 367);
             this.panel1.TabIndex = 0;
+            // 
+            // ResetBtn
+            // 
+            this.ResetBtn.Enabled = false;
+            this.ResetBtn.Location = new System.Drawing.Point(12, 274);
+            this.ResetBtn.Name = "ResetBtn";
+            this.ResetBtn.Size = new System.Drawing.Size(91, 27);
+            this.ResetBtn.TabIndex = 20;
+            this.ResetBtn.Text = "Reset";
+            this.ResetBtn.UseVisualStyleBackColor = true;
+            this.ResetBtn.Click += new System.EventHandler(this.ResetBtn_Click);
             // 
             // PrintBtn
             // 
@@ -313,17 +324,6 @@
             // 
             this.AutoSearch.Interval = 500;
             this.AutoSearch.Tick += new System.EventHandler(this.SearchBtn_Click);
-            // 
-            // ResetBtn
-            // 
-            this.ResetBtn.Enabled = false;
-            this.ResetBtn.Location = new System.Drawing.Point(12, 274);
-            this.ResetBtn.Name = "ResetBtn";
-            this.ResetBtn.Size = new System.Drawing.Size(91, 27);
-            this.ResetBtn.TabIndex = 20;
-            this.ResetBtn.Text = "Reset";
-            this.ResetBtn.UseVisualStyleBackColor = true;
-            this.ResetBtn.Click += new System.EventHandler(this.ResetBtn_Click);
             // 
             // MainForm
             // 

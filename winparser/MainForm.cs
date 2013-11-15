@@ -203,6 +203,8 @@ namespace winparser
                     Results.InsertRange(0, move);
                 }
             }
+            if (SearchBrowser.Focused == false)
+                SearchBrowser.Select();
 
         }
 
@@ -232,6 +234,7 @@ namespace winparser
                     ShowAsText(Results.Take(2000), visible, html);
                 else
                     ShowAsTable(Results.Take(2000), visible, html);
+
             }
 
             html.Append("</html>");
@@ -253,6 +256,7 @@ namespace winparser
             //var path = Directory.GetCurrentDirectory() + "\\results.htm";
             //File.WriteAllText(path, html.ToString());
             //SearchBrowser.Navigate("file:///" + path);
+
         }
 
         private void ShowAsText(IEnumerable<Spell> list, Func<Spell, bool> visible, StringBuilder html)
@@ -684,6 +688,8 @@ namespace winparser
                 SearchCategory.Items.Clear();
                 SearchCategory.Items.AddRange(cat.ToArray());
                 SearchBtn.Select();
+                if (!SearchBrowser.Focused)
+                    SearchBrowser.Select();
             }
             else
             {
