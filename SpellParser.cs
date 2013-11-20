@@ -823,14 +823,14 @@ namespace Everquest
         Pixie_Stix = 1976,
         Chunk_of_Meat = 3418,
         Imbued_Resurrection_Urn__Spell_926___ = 3500,
-        Burning_Rock = 3714,
+        Burning_Rock__Spell_91___ = 3714,
         Throwing_Rock = 3870,
         Sensei_s_Belt_Pouch = 3901,
-        Leonin_Bola = 4456,
-        Summoned_Hammer_of_Judgement = 5800,
-        Summoned_Hammer_of_Divinity = 5801,
-        Summoned_Hammer_of_Wrath = 5802,
-        Summoned_Hammer_of_the_Gods = 5803,
+        Leonin_Bola__Spell_2855___ccc = 4456,
+        Summoned_Hammer_of_Judgement__Spell_2___ccc = 5800,
+        Summoned_Hammer_of_Divinity__Spell_2___ccc = 5801,
+        Summoned_Hammer_of_Wrath__Spell_2___ccc = 5802,
+        Summoned_Hammer_of_the_Gods__Spell_2___ccc = 5803,
         Bandages = 5926,
         Bat_Wing = 6002,
         Water_Flask = 6011,
@@ -866,7 +866,7 @@ namespace Everquest
         Summoned_Halo_of_Light = 7032,
         Summoned_Sphere_of_Light = 7033,
         Summoned_Bauble_of_Battle = 7034,
-        Summoned_Globe_of_Searfire = 7035,
+        Summoned_Globe_of_Searfire__Spell_2856___www = 7035,
         Very_Easy_Treasure_Map = 9585,
         Easy_Treasure_Map = 9586,
         Moderate_Treasure_Map = 9587,
@@ -914,7 +914,7 @@ namespace Everquest
         Enchanted_Gold_Bar = 16506,
         Enchanted_Platinum_Bar = 16507,
         Summoned_Gruplok_Collar = 19002,
-        Summoned_Murk_Beads = 19030,
+        Summoned_Murk_Beads__Spell_4022___ = 19030,
         Soulfire = 21401,
         Soulfire_ = 21402,
         Burning_Arrow = 21505,
@@ -923,14 +923,14 @@ namespace Everquest
         Summoned_Bloodstone = 31289,
         Summoned_Jasper = 31290,
         Summoned_Peridot = 31291,
-        Summoned_Deepshard = 31292,
+        Summoned_Deepshard__Spell_86___ = 31292,
         Summoned_Enduring_Bread = 31293,
         Summoned_Water_of_Knowledge = 31294,
         Summoned_Seeking_Arrow = 31295,
         Summoned_Dart_of_Doom = 31296,
         Summoned_Heartseeker_Arrow = 31297,
-        Summoned_Blade_of_Power = 31298,
-        Summoned_Spear_of_Power = 31299,
+        Summoned_Blade_of_Power__Spell_2688___ccc = 31298,
+        Summoned_Spear_of_Power__Spell_2688___ccc = 31299,
         Spiderkin_Silk__Spell_303___ = 32008,
         Tiny_Tin_Whistle = 32501,
         Dwarven_Ale = 32593
@@ -2198,7 +2198,7 @@ namespace Everquest
     {
         // the spell file is in US culture (dots are used for decimals)
         private static readonly CultureInfo culture = new CultureInfo("en-US", false);
-
+        private static Dictionary<string, string> friendlynames = new Dictionary<string, string>(200);
         /// <summary>
         /// Load spell list from the EQ spell definition files.
         /// </summary>
@@ -2206,6 +2206,7 @@ namespace Everquest
         {
             List<Spell> list = new List<Spell>(50000);
             Dictionary<int, Spell> listById = new Dictionary<int, Spell>(50000);
+
             //Dictionary<int, Spell> listByGroup = new Dictionary<int, Spell>(30000);
 
             // load description text file
@@ -2369,6 +2370,222 @@ namespace Everquest
             return list;
         }
 
+        static public void loadFriendlyNames()
+        {
+            friendlynames.Add("SumEarthR4", "Earth Elemental");
+            friendlynames.Add("SpiritWolf30", "Spirit Wolf");
+            friendlynames.Add("SpiritWolf38", "Spirit Wolf");
+            friendlynames.Add("SpiritWolf42", "Spirit Wolf");
+            friendlynames.Add("Animation1", "Animation");
+            friendlynames.Add("Animation8", "Animation");
+            friendlynames.Add("SumWaterR4", "Water Elemental");
+            friendlynames.Add("SumFireR4", "Fire Elemental");
+            friendlynames.Add("SumAirR4", "Air Elemental");
+            friendlynames.Add("SumEarthR15", "Earth Elemental");
+            friendlynames.Add("SumWaterR15", "Water Elemental");
+            friendlynames.Add("Skeleton1", "Skeleton");
+            friendlynames.Add("Skeleton8", "Skeleton");
+            friendlynames.Add("Skeleton11", "Skeleton");
+            friendlynames.Add("SumFireR15", "Fire Elemental");
+            friendlynames.Add("SumAirR15", "Air Elemental");
+            friendlynames.Add("SumEarthR8", "Earth Elemental");
+            friendlynames.Add("SumWaterR8", "Water Elemental");
+            friendlynames.Add("SumFireR8", "Fire Elemental");
+            friendlynames.Add("SumAirR8", "Air Elemental");
+            friendlynames.Add("SumEarthR11", "Earth Elemental");
+            friendlynames.Add("SumWaterR11", "Water Elemental");
+            friendlynames.Add("SumFireR11", "Fire Elemental");
+            friendlynames.Add("SumAirR11", "Air Elemental");
+            friendlynames.Add("Skeleton19", "Skeleton");
+            friendlynames.Add("Skeleton27", "Skeleton");
+            friendlynames.Add("Skeleton36", "Skeleton");
+            friendlynames.Add("Skeleton44", "Skeleton");
+            friendlynames.Add("Skeleton4", "Skeleton");
+            friendlynames.Add("Skeleton15", "Skeleton");
+            friendlynames.Add("Skeleton22", "Skeleton");
+            friendlynames.Add("Skeleton31", "Skeleton");
+            friendlynames.Add("Skeleton40", "Skeleton");
+            friendlynames.Add("SumEarthR19", "Earth Elemental");
+            friendlynames.Add("SumWaterR19", "Water Elemental");
+            friendlynames.Add("SumFireR19", "Fire Elemental");
+            friendlynames.Add("SumAirR19", "Air Elemental");
+            friendlynames.Add("mistwoods", "Mistwoods");
+            friendlynames.Add("SumEarthR23", "Earth Elemental");
+            friendlynames.Add("SumWaterR23", "Water Elemental");
+            friendlynames.Add("SumFireR23", "Fire Elemental");
+            friendlynames.Add("SumAirR23", "Air Elemental");
+            friendlynames.Add("SumEarthR27", "Earth Elemental");
+            friendlynames.Add("SumWaterR27", "Water Elemental");
+            friendlynames.Add("SumFireR27", "Fire  Elemental");
+            friendlynames.Add("SumAirR27", "Air Elemental");
+            friendlynames.Add("SpiritWolf34", "Spirit Wolf");
+            friendlynames.Add("SumEarthR32", "Earth Elemental");
+            friendlynames.Add("SumWaterR32", "Water Elemental");
+            friendlynames.Add("SumFireR32", "Fire Elemental");
+            friendlynames.Add("SumAirR32", "Air Elemental");
+            friendlynames.Add("SumEarthR36", "Earth Elemental");
+            friendlynames.Add("SumWaterR36", "Water Elemental");
+            friendlynames.Add("SumFireR36", "Fire Elemental");
+            friendlynames.Add("SumAirR36", "Air Elemental");
+            friendlynames.Add("SumEarthR40", "Earth Elemental");
+            friendlynames.Add("SumWaterR40", "Water Elemental");
+            friendlynames.Add("SumFireR40", "Fire Elemental");
+            friendlynames.Add("SumAirR40", "Air Elemental");
+            friendlynames.Add("SumEarthR44", "Earth Elemental");
+            friendlynames.Add("SumWaterR44", "Water Elemental");
+            friendlynames.Add("SumFireR44", "Fire Elemental");
+            friendlynames.Add("SumAirR44", "Air Elemental");
+            friendlynames.Add("Animation4", "Animation");
+            friendlynames.Add("Animation11", "Animation");
+            friendlynames.Add("Animation15", "Animation");
+            friendlynames.Add("Animation18", "Animation");
+            friendlynames.Add("Animation22", "Animation");
+            friendlynames.Add("Animation26", "Animation");
+            friendlynames.Add("Animation31", "Animation");
+            friendlynames.Add("Animation35", "Animation");
+            friendlynames.Add("Animation39", "Animation");
+            friendlynames.Add("Animation44", "Animation");
+            friendlynames.Add("Mistwalker", "Mistwalker");
+            friendlynames.Add("towertarhyl", "Tower of Tarhyl");
+            friendlynames.Add("grobb", "Grobb");
+            friendlynames.Add("southwaste", "Southern Waste of Tarhyl");
+            friendlynames.Add("greenmist", "Greenmist");
+            friendlynames.Add("shardmtns", "Obsidian Shard Mountains");
+            friendlynames.Add("sunpeaks", "Red Sun Peaks");
+            friendlynames.Add("nbadlands", "Northern Badlands");
+            friendlynames.Add("surefall", "Surefall Glade");
+            friendlynames.Add("everfrost", "Everfrost Peaks");
+            friendlynames.Add("gfaydark", "Greater Faydark");
+            friendlynames.Add("goblinskull", "Goblinskull Mountains");
+            friendlynames.Add("steamfont", "Steamfont Mountains");
+            friendlynames.Add("Familiar5", "Familiar");
+            friendlynames.Add("seaswords", "Sea of Swords");
+            friendlynames.Add("burningwood", "Burning Wood");
+            friendlynames.Add("southnport", "South Newport");
+            friendlynames.Add("ElementalHost", "Elemental Host");
+            friendlynames.Add("SpiritHost", "Spirit Host");
+            friendlynames.Add("CallOfXuzl", "Sword of Xuzl");
+            friendlynames.Add("CrownStorms0", "Crown of Storms");
+            friendlynames.Add("CrownStorms1", "Crown of Storms");
+            friendlynames.Add("CrownStorms2", "Crown of Storms");
+            friendlynames.Add("powater", "Plane of Water");
+            friendlynames.Add("prison", "Prison of Admyrrza");
+            friendlynames.Add("Skeleton58", "Skeleton");
+            friendlynames.Add("Familiar8", "Familiar");
+            friendlynames.Add("Familiar9", "Familiar");
+            friendlynames.Add("pocketplane", "Pocket Plane");
+            friendlynames.Add("centaur", "Centaur Hills");
+            friendlynames.Add("rivervale", "Rivervale");
+            friendlynames.Add("Familiar10", "Familiar");
+            friendlynames.Add("overthere", "Overthere");
+            friendlynames.Add("thurgadina", "Thurgadin");
+            friendlynames.Add("westwastes", "Western Wastes");
+            friendlynames.Add("poair", "Plane of Air");
+            friendlynames.Add("same", "Same Zone");
+            friendlynames.Add("faentharc", "Faentharc");
+            friendlynames.Add("MonsterSum32", "Monster");
+            friendlynames.Add("MonsterSum45", "Monster");
+            friendlynames.Add("MonsterSum52", "Monster");
+            friendlynames.Add("frosthorn", "Frosthorn");
+            friendlynames.Add("greatdivide", "Great Divide");
+            friendlynames.Add("wyvernfang", "Wyvernfang");
+            friendlynames.Add("DruidPet", "Druid Pet");
+            friendlynames.Add("cmalath", "Cyrtho Malath");
+            friendlynames.Add("SpiritWolf48", "Spirit Wolf");
+            friendlynames.Add("Skeleton48", "Skeleton");
+            friendlynames.Add("Skeleton50", "Skeleton");
+            friendlynames.Add("Skeleton52", "Skeleton");
+            friendlynames.Add("SumEarthR49", "Earth Elemental");
+            friendlynames.Add("SumWaterR49", "Water Elemental");
+            friendlynames.Add("SumFireR49", "Fire Elemental");
+            friendlynames.Add("SumAirR49", "Air Elemental");
+            friendlynames.Add("SumEarthR52", "Earth Elemental");
+            friendlynames.Add("SumWaterR52", "Water Elemental");
+            friendlynames.Add("SumFireR52", "Fire Elemental");
+            friendlynames.Add("SumAirR52", "Air Elemental");
+            friendlynames.Add("SumHammer", "Summoned Hammer");
+            friendlynames.Add("SumSword", "Summoned Sword");
+            friendlynames.Add("Animation48", "Animation");
+            friendlynames.Add("dreadfang", "Dreadfang Spire");
+            friendlynames.Add("CrysSpider", "Crystal Spider");
+            friendlynames.Add("heartland", "Heartland Plateau");
+            friendlynames.Add("highkeep", "High Keep");
+            friendlynames.Add("athicaa", "Athica");
+            friendlynames.Add("Animation52", "Animation");
+            friendlynames.Add("SumMageMultiElement", "Multi-Elemental");
+            friendlynames.Add("Halflings", "Halflings");
+            friendlynames.Add("SkeleHost", "Skeleton Host");
+            friendlynames.Add("ncat", "Newport Sewers");
+            friendlynames.Add("feerrott", "Greenmist");
+            friendlynames.Add("trap", "Trap");
+            friendlynames.Add("murk", "The Murk");
+            friendlynames.Add("dreadlands", "Dreadlands");
+            friendlynames.Add("potorment", "Plane of Torment");
+            friendlynames.Add("misery", "Halls of Misery");
+            friendlynames.Add("oggok", "Oggok");
+            friendlynames.Add("ClayGolem", "Clay Golem");
+            friendlynames.Add("LampSpirit", "Lamp Spirit");
+            friendlynames.Add("ycrat", "Yclist Rat");
+            friendlynames.Add("valor", "Plane of Valor");
+            friendlynames.Add("seastorm", "Storm Sea");
+            friendlynames.Add("smalath", "Sadri Malath");
+            friendlynames.Add("ponightmare", "Plane of Nightmare");
+            friendlynames.Add("rust", "The Rust");
+            friendlynames.Add("SumFireR75", "Fire Elemental");
+            friendlynames.Add("Familiar1", "Familiar");
+            friendlynames.Add("Familiar2", "Familiar");
+            friendlynames.Add("Familiar3", "Familiar");
+            friendlynames.Add("Familiar4", "Familiar");
+            friendlynames.Add("BLpet09", "Beastlord Pet");
+            friendlynames.Add("BLpet22", "Beastlord Pet");
+            friendlynames.Add("BLpet29", "Beastlord Pet");
+            friendlynames.Add("BLpet37", "Beastlord Pet");
+            friendlynames.Add("BLpet45", "Beastlord Pet");
+            friendlynames.Add("BLpet47", "Beastlord Pet");
+            friendlynames.Add("BLpet49", "Beastlord Pet");
+            friendlynames.Add("BLpet51", "Beastlord Pet");
+            friendlynames.Add("BLpet53", "Beastlord Pet");
+            friendlynames.Add("BLpet14", "Beastlord Pet");
+            friendlynames.Add("shadowhaven", "Shadowhaven");
+            friendlynames.Add("TestHorseA", "Horse");
+            friendlynames.Add("Familiar6", "Familiar");
+            friendlynames.Add("Familiar7", "Familiar");
+            friendlynames.Add("thaztower", "Thazeran's Tower");
+            friendlynames.Add("sseru", "Sanctus Seru");
+            friendlynames.Add("dragonhorn", "Dragonhorn Keep");
+            friendlynames.Add("stormkeep", "Stormkeep");
+            friendlynames.Add("Skeleton55", "Skeleton");
+            friendlynames.Add("SumFireR55", "Fire Elemental");
+            friendlynames.Add("SumAirR55", "Air Elemental");
+            friendlynames.Add("SumWaterR55", "Water Elemental");
+            friendlynames.Add("SumEarthR55", "Earth Elemental");
+            friendlynames.Add("MonsterSum55", "Monster");
+            friendlynames.Add("ServantRo", "Servant of Ro");
+            friendlynames.Add("SumSword2", "Summoned Sword");
+            friendlynames.Add("SpiritWolf52", "Spirit Wolf");
+            friendlynames.Add("BLpet55", "Beastlord Pet");
+            friendlynames.Add("pofire", "Azzerach, the Forsaken Realm");
+            friendlynames.Add("Familiar11", "Familiar");
+            friendlynames.Add("comercy", "City of Mercy");
+            friendlynames.Add("night", "Plane of Nightmare");
+            friendlynames.Add("poearth", "Plane of Earth");
+            friendlynames.Add("ranger1", "Rangefinder");
+            friendlynames.Add("ranger2", "Rangefinder");
+            friendlynames.Add("ranger3", "Rangefinder");
+            friendlynames.Add("poentropy", "Plane of Entropy");
+            friendlynames.Add("prophets", "Prophet's Landing");
+            friendlynames.Add("Skeleton65", "Skeleton");
+            friendlynames.Add("MonsterSum66", "Monster");
+            friendlynames.Add("BeastHost", "Beast Host");
+            friendlynames.Add("BLpet66", "Beastlord Pet");
+            friendlynames.Add("SumMageFusion", "Fusion Pet");
+            friendlynames.Add("Celestwell", "Celestial Well");
+            friendlynames.Add("ranger4", "Rangefinder");
+            friendlynames.Add("magicdog", "Magic Dog");
+            friendlynames.Add("DruidPet2", "Druid Pet");
+            friendlynames.Add("underhill", "Underhill");
+        }
+
         /// <summary>
         /// Parse a spell from a set of spell fields.
         /// </summary>
@@ -2383,6 +2600,8 @@ namespace Everquest
             spell.Name = fields[1];
             //Target = fields[2];
             spell.Extra = fields[3];
+            if (spell.Extra.Length > 0 && friendlynames.ContainsKey(spell.Extra.ToString()))
+                spell.Extra = friendlynames[spell.Extra.ToString()];
             spell.YouCast = fields[4];
             spell.OtherCast = fields[5];
             spell.LandOnSelf = fields[6];

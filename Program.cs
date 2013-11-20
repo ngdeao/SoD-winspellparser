@@ -48,7 +48,7 @@ namespace parser
 
                 if (!File.Exists(SpellFilename))
                     DownloadPatchFiles(null);
-
+                SpellParser.loadFriendlyNames();
                 Console.Error.Write("Loading {0}... ", SpellFilename);
                 spells = new SpellCache(Path.GetFileName(SpellFilename), SpellParser.LoadFromFile(SpellFilename, SpellFilename.Replace("spells_us", "dbstr_us")));
                 Console.Error.WriteLine("{0} spells", spells.Count);

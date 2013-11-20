@@ -49,7 +49,7 @@ namespace winparser
             //SearchEffect.Items.Add("Add Defensive Proc");
             SearchEffect.Items.AddRange(SpellSearch.EffectHelpers.Keys.ToArray());
             SearchEffect.Items.Add("");
-
+            SpellParser.loadFriendlyNames();
             //SearchBrowser.ObjectForScripting = this;
         }
 
@@ -59,7 +59,6 @@ namespace winparser
             Text = spellPath;
 
             Cursor.Current = Cursors.WaitCursor;
-
             Spells = new SpellCache(Path.GetFileName(spellPath), SpellParser.LoadFromFile(spellPath, descPath));
             SearchClass_TextChanged(this, null);
             AutoSearch.Enabled = false;
