@@ -1110,9 +1110,9 @@ namespace Everquest
                         result.Add("Consumes: " + Spell.FormatEnumItem((Items)ConsumeItemID[i]));
                 }
 
-            for (int i = 0; i < FocusID.Length; i++)
-                if (FocusID[i] > 0)
-                    result.Add("Focus: [Item " + FocusID[i] + "]");
+            //for (int i = 0; i < FocusID.Length; i++)
+            //    if (FocusID[i] > 0)
+            //        result.Add("Focus: [Item " + FocusID[i] + "]");
 
             //if (BetaOnly)
             //    result.Add("Restriction: Beta Only");
@@ -2238,13 +2238,14 @@ namespace Everquest
                         }
                         else
                         {
+                            line = line.Replace("^", " ");
                             int index_start = line.IndexOf(" ");
                             if (index_start < 2)
                                 continue;
                             int type_val = ParseInt(line.Substring(0, index_start));
                             if (type_val > 36000 && type_val < 40000)
                                 desc["5/" + line.Substring(0, index_start)] = line.Substring(index_start).Trim();
-                            else if (type_val > 39000)
+                            else if (type_val > 39999)
                                 desc["6/" + line.Substring(0, index_start)] = line.Substring(index_start).Trim();
                         }
                     }
