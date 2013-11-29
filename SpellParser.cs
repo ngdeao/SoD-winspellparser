@@ -950,6 +950,7 @@ namespace Everquest
         public int DurationTicks;
         public bool DurationExtendable;
         public string[] Slots;
+        public string[] AdvSlots;
         public int[] SlotEffects;
         public int[] Base1s;
         //public byte Level;
@@ -1050,6 +1051,7 @@ namespace Everquest
         public Spell()
         {
             Slots = new string[12];
+            AdvSlots = new string[12];
             SlotEffects = new int[12];
             Base1s = new int[12];
             Levels = new byte[16];
@@ -1181,9 +1183,6 @@ namespace Everquest
                     + (PersistAfterDeath ? ", Persist After Death" : "")); // pretty rare, so only shown when it's used
             else if (AEDuration >= 2500)
                 result.Add("AE Waves: " + AEDuration / 2500);
-#if DEBUG
-            result.Add("SPA Index: " + SPAIdx);
-#endif
 
             //if (PushUp != 0)
             //    result.Add("Push: " + PushBack + "' Up: " + PushUp + "'");
@@ -1214,18 +1213,6 @@ namespace Everquest
             //for (int i = 0; i < Slots.Length; i++)
             //    if (Slots[i] != null)
             //        result.Add(String.Format("Slot {0}: {1}", i + 1, Slots[i]));
-#if DEBUG
-            if (!String.IsNullOrEmpty(YouCast))
-                result.Add("You Cast: " + YouCast);
-            //if (!String.IsNullOrEmpty(OtherCast))
-            //    result.Add("Other Cast: " + OtherCast);
-            //if (!String.IsNullOrEmpty(LandOnOther))
-            //    result.Add("Lands on Other: " + LandOnOther);
-            //if (!String.IsNullOrEmpty(WearOffMessage))
-            //    result.Add("Wears Off: " + WearOffMessage);
-#endif
-            if (!String.IsNullOrEmpty(LandOnSelf))
-                result.Add("Lands on You: " + LandOnSelf);
 
             return result.ToArray();
         }
@@ -1371,8 +1358,8 @@ namespace Everquest
             if (spa == 254)
                 return null;
 
-            // type 10 sometimes indicates an unused slot
-            if (spa == 10 && (base1 <= 1 || base1 > 255))
+            // unused slots
+            if (base1 == 0 && base2 == 0 && max == 0 && (spa == 0 || spa == 1 || spa == 2 || spa == 5 || spa == 6 || spa == 10))
                 return null;
 
             // many SPAs use a scaled value based on either current tick or caster level
@@ -1781,8 +1768,10 @@ namespace Everquest
                             return String.Format("Unknown Curse: {0}", base1);
                     }
                 case 152:
-                    return "Swarm Pet";
-                //return String.Format("Summon Pet: {0} x {1} for {2}s", Extra, base1, max);
+                    if (base1 > 1)
+                        return String.Format("Swarm Pet (x{0}) -- {1}", base1, Extra);
+                    else
+                        return String.Format("Swarm Pet -- {0}", Extra);
                 case 153:
                     // AUTOCAST for SOD - need to add spell id, and links same as recourse
                     return String.Format("Autocast: [Spell {0}]", base1);
@@ -2808,13 +2797,10 @@ namespace Everquest
                 spell.Base1s[i] = base1;
                 spell.Slots[i] = spell.ParseEffect(spa, base1, base2, max, calc, MaxLevel, MinLevel);
 
-#if DEBUG
                 if (spell.Slots[i] != null) 
                 {
-                    int value = Spell.CalcValue(calc, base1, max, 1, MaxLevel);
-                    spell.Slots[i] = String.Format("SPA {0} Base1={1} Base2={2} Max={3} Calc={4} --- ", spa, base1, base2, max, calc) + spell.Slots[i];
+                    spell.AdvSlots[i] = String.Format("SPA={0} Base1={1} Base2={2} Max={3} Calc={4} --- ", spa, base1, base2, max, calc);
                 }
-#endif
 
                 // debug stuff: detect difference in value/base1 for spells where i'm not sure which one should be used and have chosen one arbitrarily
                 //int[] uses_value = new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 15, 21, 24, 35, 36, 46, 47, 48, 49, 50, 55, 58, 59, 69, 79, 92, 97, 100, 111, 116, 158, 159, 164, 165, 166, 169, 184, 189, 190, 192, 262, 334, 417};

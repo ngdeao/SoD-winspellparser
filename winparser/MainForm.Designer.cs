@@ -54,11 +54,13 @@
             this.SearchBrowser = new System.Windows.Forms.WebBrowser();
             this.AutoSearch = new System.Windows.Forms.Timer(this.components);
             this.ToolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.ShowDetails = new System.Windows.Forms.CheckBox();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.ShowDetails);
             this.panel1.Controls.Add(this.ResetBtn);
             this.panel1.Controls.Add(this.PrintBtn);
             this.panel1.Controls.Add(this.ShowRelated);
@@ -325,6 +327,17 @@
             this.AutoSearch.Interval = 500;
             this.AutoSearch.Tick += new System.EventHandler(this.SearchBtn_Click);
             // 
+            // ShowDetails
+            // 
+            this.ShowDetails.AutoSize = true;
+            this.ShowDetails.Location = new System.Drawing.Point(159, 187);
+            this.ShowDetails.Name = "ShowDetails";
+            this.ShowDetails.Size = new System.Drawing.Size(61, 19);
+            this.ShowDetails.TabIndex = 21;
+            this.ShowDetails.Text = "Details";
+            this.ShowDetails.UseVisualStyleBackColor = true;
+            this.ShowDetails.CheckedChanged += new System.EventHandler(this.Initiate_Search);
+            // 
             // MainForm
             // 
             this.AcceptButton = this.SearchBtn;
@@ -371,6 +384,7 @@
         private System.Windows.Forms.Button PrintBtn;
         private System.Windows.Forms.Label SearchNotes;
         private System.Windows.Forms.Button ResetBtn;
+        private System.Windows.Forms.CheckBox ShowDetails;
 
     }
 }

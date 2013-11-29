@@ -277,9 +277,34 @@ namespace winparser
                 }
                 foreach (var line in spell.Details())
                     html.AppendFormat("{0}<br/>", InsertSpellRefLinks(line));
+
+                if (this.ShowDetails.Checked)
+                {
+                    html.AppendFormat("SPA Index: {0}<br/>", spell.SPAIdx);
+                    if (!String.IsNullOrEmpty(spell.YouCast))
+                        html.AppendFormat("You Cast: {0}<br/>", spell.YouCast);
+                    if (!String.IsNullOrEmpty(spell.OtherCast))
+                        html.AppendFormat("Other Cast: {0}<br/>", spell.OtherCast);
+                    if (!String.IsNullOrEmpty(spell.LandOnOther))
+                        html.AppendFormat("Lands on Other: {0}<br/>", spell.LandOnOther);
+                    if (!String.IsNullOrEmpty(spell.WearOffMessage))
+                        html.AppendFormat("Wears Off: {0}<br/>", spell.WearOffMessage);
+
+                }
+                if (!String.IsNullOrEmpty(spell.LandOnSelf))
+                    html.AppendFormat("Lands on You: {0}<br/>", spell.LandOnSelf);
+
+
                 for (int i = 0; i < spell.Slots.Length; i++)
+                {
                     if (!String.IsNullOrEmpty(spell.Slots[i]))
-                        html.AppendFormat("<Strong>Slot {0}:</strong> {1}<br/>", i + 1, InsertSpellRefLinks(spell.Slots[i]));
+                    {
+                        if (this.ShowDetails.Checked)
+                            html.AppendFormat("<Strong>Slot {0}:</strong> {1}{2}<br/>", i + 1, spell.AdvSlots[i], InsertSpellRefLinks(spell.Slots[i]));
+                        else
+                            html.AppendFormat("<Strong>Slot {0}:</strong> {1}<br/>", i + 1, InsertSpellRefLinks(spell.Slots[i]));
+                    }
+                }
 #if DEBUG
 
                 if (spell.Desc != null)
