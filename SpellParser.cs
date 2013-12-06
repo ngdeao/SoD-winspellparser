@@ -30,7 +30,7 @@ namespace Everquest
     public enum SpellClassesLong
     {
         Warrior = 1, Cleric, Paladin, Ranger, ShadowKnight, Druid, Monk, Bard, Rogue, Shaman,
-        Necro, Wizard, Mage, Enchanter, Beastlord //, Berserker
+        Necromancer, Wizard, Magician, Enchanter, Beastlord //, Berserker
     }
 
     [Flags]
@@ -322,7 +322,7 @@ namespace Everquest
         Directional_AE = 42,
         Frontal_AE = 44,
         Single_In_Group = 43,
-        Target_Ring_AE = 45,
+        Self_and_Pet = 45,
         Construct = 46,
         Pet_Owner = 47,
         Target_AE_No_Players_Pets = 50 // blanket of forgetfullness. beneficial, AE mem blur, with max targets
@@ -968,6 +968,7 @@ namespace Everquest
         public int MinResist;
         public int MaxResist;
         public string Extra;
+        public string ExtraBase;
         public int HateOverride;
         public int HateMod;
         public int Range;
@@ -1398,7 +1399,10 @@ namespace Everquest
 
                     return Spell.FormatCount("Current HP", value, minvalue, level, minlevel) + repeating + spaString + range;
                 case 1:
-                    return Spell.FormatCount("AC", value * 300 / 1000, minvalue * 300 / 1000, level, minlevel);
+                    if (value > 0)
+                        return Spell.FormatCount("AC", value * 300 / 1000, minvalue * 300 / 1000, level, minlevel);
+                    else
+                        return Spell.FormatCount("AC", value, minvalue, level, minlevel);
                 case 2:
                     return Spell.FormatCount("ATK", (int)value,(int) minvalue, level, minlevel) + range;
                 case 3:
@@ -1629,6 +1633,16 @@ namespace Everquest
                     return "Inhibit Gate";
                 case 106:
                     return String.Format("Summon Warder: {0}", Extra);
+                case 107:
+                    switch (max)
+                    {
+                        case 0:
+                            return Spell.FormatPercent("Maximum Pet Hit Points", base1);
+                        case 1:
+                            return Spell.FormatPercent("Maximum Pet Damage", base1 / 2);
+                        default:
+                            return String.Format("Unknown Pet Enhancement: {0}", max);
+                    }
                 case 108:
                     return String.Format("Summon Familiar: {0}", Extra);
                 case 109:
@@ -1653,12 +1667,11 @@ namespace Everquest
                 case 116:
                     return Spell.FormatCount("Curse Counter", value);
                 case 117:
-                    // fear me now wil o wisps
-                    return "Make Weapon Magical";
+                    return "Scrambles Chat";
                 case 118:
                     return Spell.FormatCount("Singing Skill", value);
                 case 119:
-                    return Spell.FormatPercent("Melee Haste v3", value);
+                    return Spell.FormatPercent("Melee Haste v3 (Above Cap)", value - 100);
                 case 120:
                     return Spell.FormatPercent("Spell Damage Taken", base1); // not range
                 case 121:
@@ -1698,11 +1711,19 @@ namespace Everquest
                             return String.Format("Unknown Effect Boost: {0}", max);
                     }
                 case 125:
-                    return Spell.FormatPercent("Chance of Critical Heals", base1);
+                    switch (max)
+                    {
+                        case 0:
+                            return Spell.FormatPercent("Strength of Healing Spells", base1);
+                        case 1:
+                            return Spell.FormatPercent("Chance of Critical Heals", base1);
+                        default:
+                            return String.Format("Unknown Healing spell Boost: {0}", max);
+                    }
                 case 126:
-                    return Spell.FormatPercent("Spell Resist Rate", -base1);
+                    return Spell.FormatCount("Charm Duration", base1) + String.Format(" tick{0}", (base1 > 1 ? "s":""));
                 case 127:
-                    return Spell.FormatPercent("Casting Time", base1 - 100);
+                    return Spell.FormatPercent("Casting Time", -base1 ).Replace("Increase", "Slow").Replace("Decrease", "Improve");//- 100);
                 case 128:
                     return Spell.FormatPercent("Spell Duration", base1);
                 case 129:
@@ -2590,6 +2611,8 @@ namespace Everquest
             spell.Name = fields[1];
             //Target = fields[2];
             spell.Extra = fields[3];
+            spell.ExtraBase = spell.Extra;
+
             if (spell.Extra.Length > 0 && friendlynames.ContainsKey(spell.Extra.ToString()))
                 spell.Extra = friendlynames[spell.Extra.ToString()];
             spell.YouCast = fields[4];
@@ -2796,6 +2819,7 @@ namespace Everquest
                 spell.SlotEffects[i] = spa;
                 spell.Base1s[i] = base1;
                 spell.Slots[i] = spell.ParseEffect(spa, base1, base2, max, calc, MaxLevel, MinLevel);
+                
 
                 if (spell.Slots[i] != null) 
                 {
@@ -2809,6 +2833,7 @@ namespace Everquest
                 //if (value != base1 && Array.IndexOf(uses_value, spa) < 0 && Array.IndexOf(uses_base1, spa) < 0)
                 //    Console.Error.WriteLine(String.Format("SPA {1} {0} has diff value/base1: {2}/{3} calc: {4}", spell.Name, spa, value, base1, calc));
             }
+
             // Spell stacking checks after all slots filled in with spell effect and base1 values, to get any missed matches
             for (int j = 0; j < 12; j++)
             {

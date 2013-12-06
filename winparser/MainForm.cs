@@ -26,7 +26,6 @@ namespace winparser
         public List<Spell> Results;
         public HashSet<int> BaseResults; 
 
-
         public MainForm()
         {
             InitializeComponent();
@@ -75,7 +74,7 @@ namespace winparser
             html.AppendFormat("<p>Loaded <strong>{0}</strong> spells from {1}.</p></html>", Spells.Count, SpellPath);
             if (i > 0)
                 html.AppendFormat("<p>Loaded <strong>{0}</strong> spell descriptions from {1}.</p></html>", i, descPath);
-            html.Append("<p>Use the search button to perform a search on this spell file, based on the filters on the left.");
+            html.Append("<p>Use the <strong>Search</strong> button to perform a search on this spell file based on the filters to the left.");
             //html.Append("<p>Use the compare button to compare two different spell files and show the differences. e.g. test server vs live server spells.");
             //html.Append("<p>Tip: You can use the up/down arrow keys when the cursor is in the Class/Has Effect/Category fields to quickly try different searches.");
             //html.Append("<p>Tip: This parser is an open source application and accepts updates and corrections here: <a href='http://code.google.com/p/eqspellparser/' class='ext' target='_top'>http://code.google.com/p/eqspellparser/</a>");
@@ -87,7 +86,7 @@ namespace winparser
         public void resetHTML()
         {
             var html = InitHtml();
-            html.Append("<p>Use the search button to perform a search, based on the filters on the left.");
+            html.Append("<p>Use the <strong>Search</strong> button to perform a search based on the filters to the left.");
             //html.Append("<p>Tip: You can use the up/down arrow keys when the cursor is in the Class/Has Effect/Category fields to quickly try different searches.");
             ShowHtml(html);
         }
@@ -202,8 +201,7 @@ namespace winparser
                     Results.InsertRange(0, move);
                 }
             }
-            if (SearchBrowser.Focused == false)
-                SearchBrowser.Select();
+            SearchBtn.Select();
 
         }
 
@@ -237,7 +235,9 @@ namespace winparser
             }
 
             html.Append("</html>");
+
             ShowHtml(html);
+
         }
 
         private StringBuilder InitHtml()
@@ -281,6 +281,8 @@ namespace winparser
                 if (this.ShowDetails.Checked)
                 {
                     html.AppendFormat("SPA Index: {0}<br/>", spell.SPAIdx);
+                    if (!String.IsNullOrEmpty(spell.ExtraBase))
+                        html.AppendFormat("Extra: {0}<br/>", spell.ExtraBase);
                     if (!String.IsNullOrEmpty(spell.YouCast))
                         html.AppendFormat("You Cast: {0}<br/>", spell.YouCast);
                     if (!String.IsNullOrEmpty(spell.OtherCast))
@@ -541,6 +543,7 @@ namespace winparser
             Search();
             ShowResults();
             Cursor.Current = Cursors.Default;
+            SearchBrowser.Select();
         }
 
         private void CompareBtn_Click(object sender, EventArgs e)
@@ -711,9 +714,9 @@ namespace winparser
 
                 SearchCategory.Items.Clear();
                 SearchCategory.Items.AddRange(cat.ToArray());
+                
                 SearchBtn.Select();
-                if (!SearchBrowser.Focused)
-                    SearchBrowser.Select();
+
             }
             else
             {
@@ -731,6 +734,10 @@ namespace winparser
 
         private void Initiate_Search(object sender, EventArgs e)
         {
+            if (DisplayTable.Checked)
+                ShowDetails.Enabled = false;
+            else
+                ShowDetails.Enabled = true;
             AutoSearch.Interval = ((sender is TextBox) ? 2000 : 400);
             if (sender is ComboBox)
             {
@@ -743,8 +750,13 @@ namespace winparser
             }
             else
             {
-                AutoSearch.Enabled = false;
-                AutoSearch.Enabled = true;
+                if (SearchText.Text.Length > 0 || SearchClass.Text.Length > 0 ||
+                    SearchEffect.Text.Length > 0 || SearchEffectSlot.Text.Length > 0 ||
+                    SearchCategory.Text.Length > 0)
+                    {
+                        AutoSearch.Enabled = false;
+                        AutoSearch.Enabled = true;
+                    }
             }
         }
 
@@ -768,6 +780,10 @@ namespace winparser
             AutoSearch.Enabled = false;
             ResetBtn.Enabled = false;
             PrintBtn.Enabled = false;
+            if (DisplayTable.Checked)
+                ShowDetails.Enabled = false;
+            else
+                ShowDetails.Enabled = true;
             
         }
 
