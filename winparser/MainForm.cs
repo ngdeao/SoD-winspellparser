@@ -275,11 +275,19 @@ namespace winparser
                 {
                     html.AppendFormat("<p id='spell{0}' class='spell group{1} {3}'><strong>{2}</strong>     [{4}/{5}]<br/>", spell.ID, spell.GroupID, spell.Name, visible(spell) ? "" : "hidden", spell.ID, spell.GroupID);
                 }
+                if (this.ShowDetails.Checked && spell.Icon > 0)
+                    html.AppendFormat("Spell Icon: {0}<br/>", spell.Icon);
                 foreach (var line in spell.Details())
+                {
                     html.AppendFormat("{0}<br/>", InsertSpellRefLinks(line));
-
+                    if (this.ShowDetails.Checked)
+                        if (line.Length > 9 && line.IndexOf("Category:") == 0)
+                            html.AppendFormat("Category Ids: {0}<br/>", spell.CategoryIDs);
+                }
                 if (this.ShowDetails.Checked)
                 {
+                    if (spell.DurationCalc != 0 || spell.DurationBase != 0)
+                        html.AppendFormat("Duration Calc: {0} Base: {1}<br/>", spell.DurationCalc, spell.DurationBase);
                     html.AppendFormat("SPA Index: {0}<br/>", spell.SPAIdx);
                     if (!String.IsNullOrEmpty(spell.ExtraBase))
                         html.AppendFormat("Extra: {0}<br/>", spell.ExtraBase);
@@ -328,7 +336,7 @@ namespace winparser
         public string IconImage(int iconID, string spellName, int spellID)
         {
             if (iconID > 0 && iconID < 217)
-                return String.Format("<IMG src=\"res://{0}/JPG/GEMICON{1}\" title=\"Icon ID {1}\" align=\"left\">&nbsp&nbsp&nbsp<strong>{2}</strong><br/>&nbsp&nbsp&nbspSpell Id: {3}", System.Windows.Forms.Application.ExecutablePath, iconID, spellName, spellID);
+                return String.Format("<IMG src=\"res://{0}/JPG/GEMICON{1}\" align=\"left\">&nbsp&nbsp&nbsp<strong>{2}</strong><br/>&nbsp&nbsp&nbspSpell Id: {3}", System.Windows.Forms.Application.ExecutablePath, iconID, spellName, spellID);
             else
                 return String.Format("<strong>{0}</strong>  Spell Id:{1}", spellName, spellID);
         }

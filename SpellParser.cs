@@ -948,6 +948,8 @@ namespace Everquest
         public int Endurance;
         public int EnduranceUpkeep;
         public int DurationTicks;
+        public int DurationCalc;
+        public int DurationBase;
         public bool DurationExtendable;
         public string[] Slots;
         public string[] AdvSlots;
@@ -1014,6 +1016,7 @@ namespace Everquest
         public int SPAIdx;
         public bool Sneaking;
         public int[] CategoryDescID; // most AAs don't have these set
+        public string CategoryIDs;
         public string Deity;
         public int SongCap;
         public int MinRange;
@@ -1089,9 +1092,6 @@ namespace Everquest
             }
             if (Categories != null && Categories.GetLength(0) > 0)
                 result.Add("Category: " + Categories[0].ToString());
-
-
-            
 
             if (!String.IsNullOrEmpty(Deity))
                 result.Add("Deity: " + Deity);
@@ -1175,7 +1175,10 @@ namespace Everquest
                 result.Add("Cast Time: " + (CastingTime == 0 ? "Instant" : CastingTime.ToString() + "s") + ", Recast: " + FormatTime(RecastTime) + rest);
             else
                 result.Add("Cast Time: " + (CastingTime == 0 ? "Instant" : CastingTime.ToString() + "s") + rest);
-
+            
+            if (Recourse != null)
+                result.Add("Recourse: " + Recourse);
+            
             if (DurationTicks > 0)
                 result.Add("Duration: " + FormatTime(DurationTicks * 6) + " (" + DurationTicks + " ticks)" 
              //       + (Beneficial && ClassesMask != SpellClassesMask.BRD ? ", Extendable: " + (DurationExtendable ? "Yes" : "No") : "")
@@ -1202,14 +1205,8 @@ namespace Everquest
             if (MaxTargets > 0)
                 result.Add("Max Targets: " + MaxTargets);
 
-            if (Recourse != null)
-                result.Add("Recourse: " + Recourse);
-
             //if (Unknown != 0)
             //    result.Add("Unknown: " + Unknown);
-
-            //if (!String.IsNullOrEmpty(Category))
-            //    result.Add("Category: " + Category);
 
             //for (int i = 0; i < Slots.Length; i++)
             //    if (Slots[i] != null)
@@ -1395,9 +1392,9 @@ namespace Everquest
             {
                 case 0:
                     if (base2 > 0)
-                        return Spell.FormatCount("Current HP", value) + repeating + range + " (if " + Spell.FormatEnum((SpellTargetRestrict)base2) + ")";
+                        return Spell.FormatCount("Hit Points", value) + repeating + range + " (if " + Spell.FormatEnum((SpellTargetRestrict)base2) + ")";
 
-                    return Spell.FormatCount("Current HP", value, minvalue, level, minlevel) + repeating + spaString + range;
+                    return Spell.FormatCount("Hit Points", value, minvalue, level, minlevel) + repeating + spaString + range;
                 case 1:
                     if (value > 0)
                         return Spell.FormatCount("AC", value * 300 / 1000, minvalue * 300 / 1000, level, minlevel);
@@ -1451,15 +1448,12 @@ namespace Everquest
                     //    return String.Format("Stun NPC for {0:0.##}s (PC for {1:0.##}s)", base1 / 1000f, base2 / 1000f) + maxlevel;
                     return String.Format("Stun for {0:0.##}s", base1 / 1000f) + maxlevel;
                 case 22:
+                    maxlevel = (base1 > 0) ? String.Format(" up to level {0}", base1) : null;
                     return "Charm" + maxlevel;
                 case 23:
                     return "Fear" + maxlevel;
                 case 24:
-                    if (value < 0)
-                        return String.Format("Increase Stamina Loss by {0}", -value) + repeating;
-                    else
-                        return String.Format("Increase Stamina Regeneration by {0}", value) + repeating;
-                //return Spell.FormatCount("Stamina Loss", -value, -minvalue, level, minlevel);
+                    return Spell.FormatPercent("Endurance Loss", -value);
                 case 25:
                     return "Bind";
                 case 26:
@@ -1475,6 +1469,8 @@ namespace Everquest
                 case 30:
                     return String.Format("Decrease Aggro Radius to {0}", value) + maxlevel;
                 case 31:
+                    if (base1 > 1)
+                        maxlevel = String.Format(" up to level {0}", base1);
                     return "Mesmerize" + maxlevel;
                 case 32:
                     // calc 100 = summon a stack? (based on item stack size) Pouch of Quellious, Quiver of Marr
@@ -1492,7 +1488,8 @@ namespace Everquest
                 case 40:
                     return "Invulnerability";
                 case 41:
-                    return "Destroy";
+                    maxlevel = (base1 > 0) ? String.Format(" (Maximum level {0})", base1) : null;
+                    return "Destroy's Target" + maxlevel;
                 case 42:
                     // TODO: does shadowstep always gate an NPC? e.g. highsun
                     return "Shadowstep";
@@ -1550,7 +1547,7 @@ namespace Everquest
                 case 68:
                     return "Reclaim Pet";
                 case 69:
-                    return Spell.FormatCount("Max HP", value, minvalue, level, minlevel) + range;
+                    return Spell.FormatCount("Max Hit Points", value, minvalue, level, minlevel) + range;
                 case 71:
                     return String.Format("Summon Pet: {0}", Extra);
                 case 73:
@@ -1570,8 +1567,8 @@ namespace Everquest
                 case 79:
                     // delta hp for heal/nuke, non repeating
                     if (base2 > 0)
-                        return Spell.FormatCount("Current HP", value) + range + " (if " + Spell.FormatEnum((SpellTargetRestrict)base2) + ")";
-                    return Spell.FormatCount("Current HP", value) + range;
+                        return Spell.FormatCount("Current Hit Points", value) + range + " (if " + Spell.FormatEnum((SpellTargetRestrict)base2) + ")";
+                    return Spell.FormatCount("Current Hit Points", value) + range;
                 case 81:
                     return String.Format("Resurrect with {0}% XP", value);
                 case 82:
@@ -1626,7 +1623,10 @@ namespace Everquest
                 case 102:
                     return "Fear Immunity";
                 case 103:
-                    return String.Format("Summon Pet: {0}", Extra);
+                    if (!String.IsNullOrEmpty(Extra))
+                        return String.Format("Summon Pet: {0}", Extra);
+                    else
+                        return "Summon Pet";
                 case 104:
                     return String.Format("Translocate to {0}", Extra);
                 case 105:
@@ -1721,7 +1721,7 @@ namespace Everquest
                             return String.Format("Unknown Healing spell Boost: {0}", max);
                     }
                 case 126:
-                    return Spell.FormatCount("Charm Duration", base1) + String.Format(" tick{0}", (base1 > 1 ? "s":""));
+                    return Spell.FormatCount("Charm Duration", base1) + String.Format(" tick{0}", (base1 > 1 ? "s":"")) + " and " + Spell.FormatPercent("Mez Duration", base1 * 10);
                 case 127:
                     return Spell.FormatPercent("Casting Time", -base1 ).Replace("Increase", "Slow").Replace("Decrease", "Improve");//- 100);
                 case 128:
@@ -1773,7 +1773,7 @@ namespace Everquest
                     //if (max > 1000) max -= 1000;
                     return String.Format("Stacking: Overwrite existing spell if slot {0} is '{1}' and < {2}", calc % 100, Spell.FormatEnum((SpellEffect)base1), max);
                 case 150:
-                    return String.Format("Divine Intervention with {0} Heal", max);
+                    return String.Format("Death Save ({0}%)", base1) + (max > 0 ? String.Format(" with {0} Heal", max): "");
                 case 151:
                     switch (base1)
                     {
@@ -2627,6 +2627,8 @@ namespace Everquest
             spell.CastingTime = ParseFloat(fields[13]) / 1000f;
             spell.RestTime = ParseFloat(fields[14]) / 1000f;
             spell.RecastTime = ParseFloat(fields[15]) / 1000f;
+            spell.DurationCalc = ParseInt(fields[16]);
+            spell.DurationBase = ParseInt(fields[17]);
             spell.DurationTicks = Spell.CalcDuration(ParseInt(fields[16]), ParseInt(fields[17]), MaxLevel);
             spell.AEDuration = ParseInt(fields[18]);
             spell.Mana = ParseInt(fields[19]);
@@ -2698,6 +2700,13 @@ namespace Everquest
             spell.CategoryDescID[0] = ParseInt(fields[156]);
             spell.CategoryDescID[1] = ParseInt(fields[157]);
             spell.CategoryDescID[2] = ParseInt(fields[158]);
+            if (spell.CategoryDescID[0] > 0)
+                spell.CategoryIDs = spell.CategoryDescID[0].ToString();
+            if (spell.CategoryDescID[1] > 0)
+                spell.CategoryIDs = spell.CategoryIDs + "/" + spell.CategoryDescID[1].ToString();
+            if (spell.CategoryDescID[2] > 0)
+                spell.CategoryIDs = spell.CategoryIDs + "/" + spell.CategoryDescID[2].ToString();
+
             if (spell.CategoryDescID[0] == 0 && spell.CategoryDescID[1] == 0 && spell.CategoryDescID[2] == 0)
             {
                 // If all 3 are set to 0, then likely an AA.  
